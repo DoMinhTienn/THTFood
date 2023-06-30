@@ -1,41 +1,45 @@
 package com.example.thtfood;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.text.method.PasswordTransformationMethod;
-import android.widget.ToggleButton;
 import android.widget.CompoundButton;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText editTextPhone;
-    private EditText editTextPassword;
+    private EditText edittextInputPhone;
+    private EditText edittextInputPassword;
     private Button buttonLogin;
-    private ToggleButton toggleButtonPassword;
+    private CheckBox checkBoxShowPassword;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        editTextPhone = findViewById(R.id.editTextPhone);
-        editTextPassword = findViewById(R.id.editTextPassword);
+        edittextInputPhone = findViewById(R.id.textInputPhone);
+        edittextInputPassword = findViewById(R.id.textInputPassword);
+        edittextInputPassword.setTransformationMethod(new PasswordTransformationMethod()); //auto ẩn mật khẩu
         buttonLogin = findViewById(R.id.buttonLogin);
-        toggleButtonPassword = findViewById(R.id.toggleButtonPassword);
+        checkBoxShowPassword = findViewById(R.id.checkBoxShowPassword);
 
 
-        toggleButtonPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        checkBoxShowPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // Hiển thị mật khẩu
-                    editTextPassword.setTransformationMethod(null);
+                    edittextInputPassword.setTransformationMethod(null);
                 } else {
                     // Ẩn mật khẩu
-                    editTextPassword.setTransformationMethod(new PasswordTransformationMethod());
+                    edittextInputPassword.setTransformationMethod(new PasswordTransformationMethod());
                 }
             }
         });
@@ -43,8 +47,8 @@ public class LoginActivity extends AppCompatActivity {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = editTextPhone.getText().toString().trim();
-                String password = editTextPassword.getText().toString().trim();
+                String email = edittextInputPhone.getText().toString().trim();
+                String password = edittextInputPassword.getText().toString().trim();
 
                 if (email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Please enter phone and password", Toast.LENGTH_SHORT).show();
