@@ -62,6 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
         android:layout_marginTop="18dp"
+        android:onClick="openRegisterActivity"
         android:text="Đăng Ký"
         android:textColor="@color/red"
         app:layout_constraintStart_toEndOf="@+id/textView2"
