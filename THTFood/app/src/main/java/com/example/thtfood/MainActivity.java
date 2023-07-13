@@ -12,6 +12,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        OTPVerificationDialog otpVerificationDialog = new OTPVerificationDialog(MainActivity.this,"+84 111111111");
+        otpVerificationDialog.setCancelable(false);
+        otpVerificationDialog.show();
     }
 
 

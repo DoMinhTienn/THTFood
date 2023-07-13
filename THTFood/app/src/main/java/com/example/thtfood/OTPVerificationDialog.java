@@ -3,7 +3,10 @@ package com.example.thtfood;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+<<<<<<< HEAD
 import android.content.Intent;
+=======
+>>>>>>> 26a3953 (Update testing OTP)
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -13,10 +16,15 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+<<<<<<< HEAD
+=======
+import android.view.inputmethod.InputMethod;
+>>>>>>> 26a3953 (Update testing OTP)
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+<<<<<<< HEAD
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +36,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
+=======
+
+import androidx.annotation.NonNull;
+
+>>>>>>> 26a3953 (Update testing OTP)
 public class OTPVerificationDialog extends Dialog {
     private EditText otp1, otp2, otp3, otp4, otp5, otp6;
     private TextView btnresend;
@@ -38,6 +51,7 @@ public class OTPVerificationDialog extends Dialog {
 
     private  int selectedOTPposition = 0;
 
+<<<<<<< HEAD
    private final String phone;
     private final String verificationId;
 
@@ -53,6 +67,13 @@ public class OTPVerificationDialog extends Dialog {
         super(context);
         this.verificationId = verificationId;
         this.phone = phone;
+=======
+   private final String phonetxt;
+
+    public OTPVerificationDialog(@NonNull Context context, String phone) {
+        super(context);
+        this.phonetxt = phone;
+>>>>>>> 26a3953 (Update testing OTP)
     }
 
     @Override
@@ -84,7 +105,11 @@ public class OTPVerificationDialog extends Dialog {
 
         startCountDownTimer();
 
+<<<<<<< HEAD
         phone.setText("+84" + this.phone);
+=======
+        phone.setText(phonetxt);
+>>>>>>> 26a3953 (Update testing OTP)
 
         btnresend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,11 +126,15 @@ public class OTPVerificationDialog extends Dialog {
                 final String getOtp = otp1.getText().toString() + otp2.getText().toString() + otp3.getText().toString() + otp4.getText().toString() + otp5.getText().toString() + otp6.getText().toString();
 
                 if (getOtp.length() == 6){
+<<<<<<< HEAD
                     PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, getOtp);
                     if (verificationListener != null) {
                         verificationListener.onVerificationCompleted(credential);
                     }
                     dismiss();
+=======
+
+>>>>>>> 26a3953 (Update testing OTP)
                 };
             }
         });
@@ -211,9 +240,12 @@ public class OTPVerificationDialog extends Dialog {
             return super.onKeyUp(keyCode, event);
         }
     }
+<<<<<<< HEAD
     private void singinbyCredential(PhoneAuthCredential credential) {
         if (verificationListener != null) {
             verificationListener.onVerificationCompleted(credential);
         }
     }
+=======
+>>>>>>> 26a3953 (Update testing OTP)
 }
