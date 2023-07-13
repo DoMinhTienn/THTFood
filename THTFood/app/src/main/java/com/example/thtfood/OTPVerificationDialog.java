@@ -3,6 +3,7 @@ package com.example.thtfood;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -12,13 +13,20 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethod;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 
 public class OTPVerificationDialog extends Dialog {
     private EditText otp1, otp2, otp3, otp4, otp5, otp6;
@@ -30,11 +38,21 @@ public class OTPVerificationDialog extends Dialog {
 
     private  int selectedOTPposition = 0;
 
-   private final String phonetxt;
+   private final String phone;
+    private final String verificationId;
 
-    public OTPVerificationDialog(@NonNull Context context, String phone) {
+    public interface OTPVerificationListener {
+        void onVerificationCompleted(PhoneAuthCredential credential);
+    }
+    private OTPVerificationListener verificationListener;
+
+    public void setVerificationListener(OTPVerificationListener listener) {
+        this.verificationListener = listener;
+    }
+    public OTPVerificationDialog(@NonNull Context context, String verificationId, String phone) {
         super(context);
-        this.phonetxt = phone;
+        this.verificationId = verificationId;
+        this.phone = phone;
     }
 
     @Override
@@ -66,7 +84,7 @@ public class OTPVerificationDialog extends Dialog {
 
         startCountDownTimer();
 
-        phone.setText(phonetxt);
+        phone.setText("+84" + this.phone);
 
         btnresend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +101,11 @@ public class OTPVerificationDialog extends Dialog {
                 final String getOtp = otp1.getText().toString() + otp2.getText().toString() + otp3.getText().toString() + otp4.getText().toString() + otp5.getText().toString() + otp6.getText().toString();
 
                 if (getOtp.length() == 6){
-
+                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, getOtp);
+                    if (verificationListener != null) {
+                        verificationListener.onVerificationCompleted(credential);
+                    }
+                    dismiss();
                 };
             }
         });
@@ -187,6 +209,11 @@ public class OTPVerificationDialog extends Dialog {
             return true;
         } else{
             return super.onKeyUp(keyCode, event);
+        }
+    }
+    private void singinbyCredential(PhoneAuthCredential credential) {
+        if (verificationListener != null) {
+            verificationListener.onVerificationCompleted(credential);
         }
     }
 }
