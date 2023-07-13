@@ -7,92 +7,192 @@
     android:layout_height="match_parent"
     tools:context=".RegisterActivity">
 
-    <ImageButton
-        android:id="@+id/imageButtonQuit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@android:color/transparent"
+<!--    <LinearLayout-->
+<!--        android:id="@+id/linearLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:background="@drawable/background_register"-->
+<!--        android:orientation="vertical"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
+
+<!--    </LinearLayout>-->
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/baseline_chevron_left_24" />
+        app:srcCompat="@mipmap/logo_foreground" />
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="20dp"
-        android:textColor="#CC000000"
-        android:textSize="22sp"
+        android:id="@+id/textView"
+        android:layout_width="213dp"
+        android:layout_height="60dp"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:text="THT FOOD"
+        android:textAlignment="center"
+        android:textColor="@color/red"
+        android:textSize="28sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButtonQuit" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:text="Vui lòng nhập số điện thoại của bạn"
-        android:textColor="#80000000"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutPhone"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
+    <EditText
+        android:id="@+id/txtFirstnameR"
+        android:layout_width="355dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="2dp"
         android:layout_marginEnd="30dp"
-        android:hint="@string/phone"
+        android:gravity="left"
+        android:hint="First Name"
+        android:inputType="text"
+        android:maxLength="10"
+        android:shadowColor="#0E0E0E"
+        android:textColor="#171717"
+        android:textColorHint="#201F1F"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:prefixText="+84"
-        app:startIconDrawable="@drawable/baseline_phone_24"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:ignore="MissingConstraints" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textInputPhone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+    <EditText
+        android:id="@+id/txtLastnameR"
+        android:layout_width="355dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="30dp"
+        android:gravity="left"
+        android:hint="Last Name"
+        android:inputType="text"
+        android:maxLength="10"
+        android:shadowColor="#0E0E0E"
+        android:textColor="#171717"
+        android:textColorHint="#201F1F"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtFirstnameR"
+        tools:ignore="MissingConstraints" />
 
-            android:inputType="number"
-            android:maxLength="9" />
+    <EditText
+        android:id="@+id/txtPhoneR"
+        android:layout_width="355dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="30dp"
+        android:gravity="left"
+        android:hint="Phone"
+        android:inputType="phone"
+        android:maxLength="10"
+        android:shadowColor="#0E0E0E"
+        android:textColor="#171717"
+        android:textColorHint="#201F1F"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtLastnameR"
+        tools:ignore="MissingConstraints" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+    <EditText
+        android:id="@+id/txtPassR"
+        android:layout_width="355dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="30dp"
+        android:ems="10"
+        android:gravity="left"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textColorHint="#201F1F"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtEmailR" />
+
+    <EditText
+        android:id="@+id/txtEmailR"
+        android:layout_width="355dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="30dp"
+        android:ems="10"
+        android:gravity="left"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:textColorHint="#201F1F"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtPhoneR" />
+
+    <Button
+        android:id="@+id/btRegister"
+        android:layout_width="200dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="17dp"
+        android:text="Register"
+        app:backgroundTint="#ED0808"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.469"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtPassR"
+        app:layout_constraintVertical_bias="0.009"
+        tools:ignore="MissingConstraints" />
+
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/noti"
-        android:textColor="#80000000"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPhone" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
+        android:id="@+id/textView3"
+        android:layout_width="100dp"
+        android:layout_height="27dp"
         android:layout_gravity="center"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/round_back_brown_100"
-        android:paddingStart="30dp"
-        android:paddingEnd="30dp"
-        android:text="Gửi mã OTP"
-        android:textColor="#FFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginStart="138dp"
+        android:layout_marginTop="12dp"
+        android:gravity="left"
+        android:text="Or Register with"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/btRegister"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/imageViewFacebook"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="228dp"
+        android:layout_marginTop="45dp"
+        android:src="@mipmap/f_logo_foreground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btRegister"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/imageViewGoogle"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="45dp"
+        android:src="@drawable/g_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btRegister"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
