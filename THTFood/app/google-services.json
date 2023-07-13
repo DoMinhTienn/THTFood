@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "318047586429-r1398ns97n642otteqjvh0ec5909i8er.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.thtfood",
+            "certificate_hash": "7de707d749678401b3b05e8db8bf7e1d397ce3ac"
+          }
+        },
+        {
           "client_id": "318047586429-sac1nnuf23g6evbjcmv768c8tflol46t.apps.googleusercontent.com",
           "client_type": 3
         }
