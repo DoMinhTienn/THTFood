@@ -39,52 +39,44 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="30dp"
-        android:hint="@string/phone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:prefixText="+84"
-        app:startIconDrawable="@drawable/baseline_phone_24"
         tools:ignore="MissingConstraints">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textInputPhone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:hint="@string/phone"
             android:inputType="number"
-            android:maxLength="9" />
+            android:maxLength="10" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/round_back_brown_100"
-        android:paddingStart="30dp"
-        android:paddingEnd="30dp"
-        android:text="Gửi mã OTP"
-        android:textColor="#FFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPhone" />
+    <Button
+        android:id="@+id/buttonLogin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_background"
+        android:text="Nhận OTP"
+        app:backgroundTint="@null"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayoutPhone"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayoutPhone"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPhone"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="50dp"
         android:text="Hoặc đăng nhập bằng"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonLogin" />
 
     <TextView
         android:id="@+id/textView4"
@@ -108,12 +100,12 @@
         android:id="@+id/imageButton8"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginStart="120dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="15dp"
         android:adjustViewBounds="true"
         android:background="@null"
         android:scaleType="fitCenter"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline11"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
         app:srcCompat="@mipmap/f_logo_foreground"
         tools:ignore="MissingConstraints" />
@@ -122,12 +114,12 @@
         android:id="@+id/imageButton9"
         android:layout_width="70dp"
         android:layout_height="70dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="120dp"
         android:adjustViewBounds="true"
         android:background="@null"
         android:scaleType="fitCenter"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline11"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
         app:srcCompat="@mipmap/g_logo_foreground" />
 
@@ -135,9 +127,9 @@
         android:id="@+id/imageButtonQuit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="28dp"
         android:layout_marginTop="20dp"
-        android:background="@android:color/transparent"
+        android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_chevron_left_24" />

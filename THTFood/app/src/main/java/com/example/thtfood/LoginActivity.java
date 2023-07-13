@@ -1,12 +1,9 @@
 package com.example.thtfood;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -16,28 +13,12 @@ import android.widget.Toast;
 import android.text.method.PasswordTransformationMethod;
 import android.widget.CompoundButton;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthOptions;
-import com.google.firebase.auth.PhoneAuthProvider;
-
-import java.util.concurrent.TimeUnit;
-
 public class LoginActivity extends AppCompatActivity {
 
     private EditText edittextInputPhone;
-
-    private Button btnLogin;
+    private Button buttonLogin;
     private ImageButton imagebuttonquit;
 
-    private  String phone;
-    FirebaseAuth mAuth;
-
-    private AuthenticationManager authenticationManager;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -46,47 +27,31 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         edittextInputPhone = findViewById(R.id.textInputPhone);
-        btnLogin = findViewById(R.id.btnLogin);
+        buttonLogin = findViewById(R.id.buttonLogin);
         imagebuttonquit = findViewById(R.id.imageButtonQuit);
-        mAuth = FirebaseAuth.getInstance();
-        authenticationManager = new AuthenticationManager(this);
 
         imagebuttonquit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                startActivity(intent);
             }
         });
-        edittextInputPhone.addTextChangedListener(textWatcher);
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                phone = edittextInputPhone.getText().toString().trim();
-                authenticationManager.sendverificationcode(phone);
+                String email = edittextInputPhone.getText().toString().trim();
+                String password = edittextInputPhone.getText().toString().trim();
 
+                if (email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(LoginActivity.this, "Vui lòng nhập Email/Số Điện Thoại", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Thực hiện kiểm tra đăng nhập tại đây (ví dụ: gửi yêu cầu đăng nhập đến máy chủ)
+                    // Nếu đăng nhập thành công, chuyển sang màn hình chính của ứng dụng
+                    // Nếu đăng nhập không thành công, hiển thị thông báo lỗi
+                }
             }
         });
     }
-
-    private final TextWatcher  textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (s.length() > 0){
-                btnLogin.setBackgroundResource(R.drawable.round_back_red_100);
-            }
-            else{
-                btnLogin.setBackgroundResource(R.drawable.round_back_brown_100);
-            }
-        }
-    };
 }
