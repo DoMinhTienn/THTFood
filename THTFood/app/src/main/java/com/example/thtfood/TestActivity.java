@@ -104,7 +104,7 @@ public class TestActivity extends AppCompatActivity {
                 if(task.isSuccessful())
                 {
                     Toast.makeText(TestActivity.this,"Success",Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(TestActivity.this, MainActivity.class));
+                    startActivity(new Intent(TestActivity.this, TestActivity2.class));
                 }
             }
         });
