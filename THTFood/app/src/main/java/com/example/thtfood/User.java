@@ -1,29 +1,11 @@
 package com.example.thtfood;
 
-<<<<<<< HEAD
-import android.net.Uri;
-
-public class User {
-    private String name;
-    private String email;
-    private String role;
-    private String avatar_path;
-
-    public User(String name, String email, String role, String avatar_path) {
-        this.name = name;
-        this.email = email;
-        this.role = role;
-        this.avatar_path = avatar_path;
-    }
-
-=======
 public class User {
     private String name;
     private String email;
     private String password;
     private String avatar_path;
 
->>>>>>> 776aab8 (Update)
     public String getName() {
         return name;
     }
@@ -41,17 +23,6 @@ public class User {
     }
 
 
-<<<<<<< HEAD
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-
-=======
     public String getPassword() {
         return password;
     }
@@ -60,7 +31,6 @@ public class User {
         this.password = password;
     }
 
->>>>>>> 776aab8 (Update)
     public String getAvatar_path() {
         return avatar_path;
     }
@@ -68,8 +38,6 @@ public class User {
     public void setAvatar_path(String avatar_path) {
         this.avatar_path = avatar_path;
     }
-<<<<<<< HEAD
-=======
 
 
 
@@ -80,5 +48,4 @@ public class User {
         this.avatar_path = avatar_path;
     }
 
->>>>>>> 776aab8 (Update)
 }

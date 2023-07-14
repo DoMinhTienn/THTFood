@@ -17,29 +17,17 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-<<<<<<< HEAD
-                android:text="Nhập mã xác nhận OTP"
-=======
                 android:text="OTP Verification"
->>>>>>> 26a3953 (Update testing OTP)
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginTop="20dp"
                 android:textColor="#CC000000"
-<<<<<<< HEAD
-                android:textSize="22sp"
-=======
                 android:textSize="25sp"
->>>>>>> 26a3953 (Update testing OTP)
                 android:textStyle="bold"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-<<<<<<< HEAD
-                android:text="Mã OTP được gửi đến số điện thoại"
-=======
                 android:text="We have sent OTP"
->>>>>>> 26a3953 (Update testing OTP)
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginTop="20dp"
@@ -162,11 +150,7 @@
                 android:id="@+id/btnVerify"
                 android:layout_width="wrap_content"
                 android:layout_height="45dp"
-<<<<<<< HEAD
-                android:text="Xác Nhận"
-=======
                 android:text="Gửi OTP"
->>>>>>> 26a3953 (Update testing OTP)
                 android:layout_gravity="center"
                 android:layout_marginBottom="20dp"
                 android:paddingStart="30dp"
