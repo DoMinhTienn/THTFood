@@ -2,14 +2,18 @@ package com.example.thtfood;
 
 import android.app.Activity;
 import android.content.Intent;
+<<<<<<< HEAD
 import android.net.Uri;
 import android.util.Base64;
+=======
+>>>>>>> 6195505 (update login)
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+<<<<<<< HEAD
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,6 +50,29 @@ public class AuthenticationManager {
     public void sendverificationcode(String n){
 
         phone = n;
+=======
+import com.google.android.play.integrity.internal.a;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
+
+import java.util.concurrent.TimeUnit;
+
+public class AuthencationManager {
+    private FirebaseAuth mAuth;
+    private Activity activity;
+    private String phone;
+    String vertificationId;
+
+    public  AuthencationManager(Activity activity) {
+        this.activity = activity;
+        mAuth = FirebaseAuth.getInstance();
+    }
+    private void sendverificationcode(String n){
+>>>>>>> 6195505 (update login)
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
                         .setPhoneNumber("+84"+n)       // Phone number to verify
@@ -76,7 +103,11 @@ public class AuthenticationManager {
         @Override
         public void onCodeSent(@NonNull String s,
                                @NonNull PhoneAuthProvider.ForceResendingToken token) {
+<<<<<<< HEAD
             vertificationId = s;
+=======
+
+>>>>>>> 6195505 (update login)
             showOTPVerificationDialog(s, phone);
         }
     };
@@ -90,6 +121,7 @@ public class AuthenticationManager {
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+<<<<<<< HEAD
                 if(task.isSuccessful()) {
                     FirebaseUser user = task.getResult().getUser();
                     String userId = user.getUid();
@@ -119,10 +151,17 @@ public class AuthenticationManager {
                             Toast.makeText(activity, "Database error", Toast.LENGTH_SHORT).show();
                         }
                     });
+=======
+                if(task.isSuccessful())
+                {
+                    Toast.makeText(activity,"Success",Toast.LENGTH_SHORT).show();
+                    activity.startActivity(new Intent(activity, HomeActivity.class));
+>>>>>>> 6195505 (update login)
                 }
             }
         });
     }
+<<<<<<< HEAD
     private void saveUser(DatabaseReference userRef, String userId) {
         String name = user_register.getName();
         String email = user_register.getEmail();
@@ -166,6 +205,8 @@ public class AuthenticationManager {
             Toast.makeText(activity, "Failed to load default avatar", Toast.LENGTH_SHORT).show();
         });
     }
+=======
+>>>>>>> 6195505 (update login)
 
     private void showOTPVerificationDialog(String verificationId, String phone){
         OTPVerificationDialog otpVerificationDialog = new OTPVerificationDialog(activity, verificationId, phone);
