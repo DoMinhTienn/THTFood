@@ -2,33 +2,50 @@ package com.example.thtfood;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.util.Base64;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.play.integrity.internal.a;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.concurrent.TimeUnit;
 
-public class AuthencationManager {
+public class AuthenticationManager {
     private FirebaseAuth mAuth;
     private Activity activity;
+    private User user;
     private String phone;
     String vertificationId;
 
-    public  AuthencationManager(Activity activity) {
+    public  AuthenticationManager(Activity activity) {
         this.activity = activity;
         mAuth = FirebaseAuth.getInstance();
     }
-    private void sendverificationcode(String n){
+    public  AuthenticationManager(Activity activity, User user) {
+        this.activity = activity;
+        mAuth = FirebaseAuth.getInstance();
+        this.user = user;
+    }
+    public void sendverificationcode(String n){
+
+        phone = n;
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
                         .setPhoneNumber("+84"+n)       // Phone number to verify
@@ -73,14 +90,95 @@ public class AuthencationManager {
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful())
-                {
-                    Toast.makeText(activity,"Success",Toast.LENGTH_SHORT).show();
-                    activity.startActivity(new Intent(activity, HomeActivity.class));
+                if(task.isSuccessful()) {
+                    FirebaseUser user = task.getResult().getUser();
+                    String userId = user.getUid();
+
+                    DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
+                    DatabaseReference newUserRef = usersRef.push(); // Tạo một nút con mới
+
+                    newUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.exists()){
+                                Toast.makeText(activity,"Success",Toast.LENGTH_SHORT).show();
+                                activity.startActivity(new Intent(activity, HomeActivity.class));
+                            } else{
+                                saveUserInfoAndAvatar(newUserRef, userId, "test", "test@gmail.com", "0", null);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(activity, "Database error", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         });
     }
+    private void saveUserInfoAndAvatar(DatabaseReference userRef, String userId, String name, String email, String role, Uri avatarUri) {
+        final boolean[] uploadFailed = {false};
+
+        if (avatarUri != null) {
+            // Nếu người dùng đã upload avatar
+            // Lưu avatar vào Firebase Storage
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("avatars").child(userId + ".jpg");
+            storageRef.putFile(avatarUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Lấy URL của avatar sau khi upload thành công
+                        storageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
+                            String avatarUrl = Base64.encodeToString(bytes, Base64.DEFAULT);
+                            // Lưu URL của avatar vào Realtime Database
+                            userRef.child("avatar").setValue(avatarUrl)
+                                    .addOnCompleteListener(task -> {
+                                        if (task.isSuccessful()) {
+                                            // Lưu các thông tin khác vào Realtime Database
+                                            userRef.child("name").setValue(name);
+                                            userRef.child("email").setValue(email);
+                                            userRef.child("role").setValue(role);
+                                            Toast.makeText(activity, "Authentication success", Toast.LENGTH_SHORT).show();
+                                            activity.startActivity(new Intent(activity, HomeActivity.class));
+                                        } else {
+                                            Toast.makeText(activity, "Failed to save user information", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        });
+                    })
+                    .addOnFailureListener(e -> {
+                        // Xử lý khi upload avatar thất bại
+                        Toast.makeText(activity, "Failed to upload avatar. Please choose a different image.", Toast.LENGTH_SHORT).show();
+                        uploadFailed[0] = true;
+                    });
+        } else {
+            // Nếu không có avatar được upload
+            // Lấy URL của file default.jpg từ Firebase Storage
+            StorageReference defaultRef = FirebaseStorage.getInstance().getReference().child("avatars").child("default.jpg");
+            defaultRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
+                // Chuyển đổi mảng byte thành chuỗi Base64
+                String defaultAvatarData = Base64.encodeToString(bytes, Base64.DEFAULT);
+
+                // Lưu dữ liệu avatar vào Realtime Database
+                userRef.child("avatar").setValue(defaultAvatarData)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                // Lưu các thông tin khác vào Realtime Database
+                                userRef.child("name").setValue(name);
+                                userRef.child("email").setValue(email);
+                                userRef.child("role").setValue(role);
+                                Toast.makeText(activity, "Authentication success", Toast.LENGTH_SHORT).show();
+                                activity.startActivity(new Intent(activity, HomeActivity.class));
+                            } else {
+                                Toast.makeText(activity, "Failed to save user information", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }).addOnFailureListener(exception -> {
+                // Xử lý khi không tải được nội dung của `default.jpg`
+                Toast.makeText(activity, "Failed to load default avatar", Toast.LENGTH_SHORT).show();
+            });
+        }
+    }
+
 
     private void showOTPVerificationDialog(String verificationId, String phone){
         OTPVerificationDialog otpVerificationDialog = new OTPVerificationDialog(activity, verificationId, phone);
