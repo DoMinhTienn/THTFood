@@ -51,7 +51,12 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         authenticationManager = new AuthenticationManager(this);
 
-
+        imagebuttonquit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            }
+        });
         edittextInputPhone.addTextChangedListener(textWatcher);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
