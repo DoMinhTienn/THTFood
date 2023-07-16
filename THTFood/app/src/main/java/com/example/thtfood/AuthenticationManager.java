@@ -101,7 +101,13 @@ public class AuthenticationManager {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if(snapshot.exists()){
-                                Toast.makeText(activity,"Success",Toast.LENGTH_SHORT).show();
+                                String name = snapshot.child("name").getValue(String.class);
+                                String email = snapshot.child("email").getValue(String.class);
+                                String role = snapshot.child("role").getValue(String.class);
+                                String avatar = snapshot.child("avatar").getValue(String.class);
+
+                                User user = new  User(name, email, role, avatar);
+                                UserManager.getInstance().setUser(user);
                                 activity.startActivity(new Intent(activity, HomeActivity.class));
                             } else{
                                 saveUser(newUserRef, userId);
@@ -118,36 +124,48 @@ public class AuthenticationManager {
         });
     }
     private void saveUser(DatabaseReference userRef, String userId) {
-
         String name = user_register.getName();
         String email = user_register.getEmail();
         String role = user_register.getRole();
-            // Lấy URL của file default.jpg từ Firebase Storage
-            StorageReference defaultRef = FirebaseStorage.getInstance().getReference().child("avatars").child("default.jpg");
-            defaultRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
-                // Chuyển đổi mảng byte thành chuỗi Base64
-                String defaultAvatarData = Base64.encodeToString(bytes, Base64.DEFAULT);
 
-                // Lưu dữ liệu avatar vào Realtime Database
-                userRef.child("avatar").setValue(defaultAvatarData)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                // Lưu các thông tin khác vào Realtime Database
-                                userRef.child("name").setValue(name);
-                                userRef.child("email").setValue(email);
-                                userRef.child("role").setValue(role);
-                                Toast.makeText(activity, "Authentication success", Toast.LENGTH_SHORT).show();
-                                activity.startActivity(new Intent(activity, HomeActivity.class));
-                            } else {
-                                Toast.makeText(activity, "Failed to save user information", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+        // Lấy URL của file default.jpg từ Firebase Storage
+        StorageReference defaultRef = FirebaseStorage.getInstance().getReference().child("avatars").child("default.png");
+        defaultRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
+            // Lưu hình ảnh vào Firebase Storage
+            String filename = "avatar_" + userId + ".png";
+            StorageReference avatarRef = FirebaseStorage.getInstance().getReference().child("avatars").child(filename);
+            avatarRef.putBytes(bytes).addOnSuccessListener(taskSnapshot -> {
+                // Lấy URL của hình ảnh đã lưu trong Firebase Storage
+                avatarRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String avatarUrl = uri.toString();
+
+                    // Lưu URL của hình ảnh vào Realtime Database
+                    userRef.child("avatar").setValue(avatarUrl)
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    // Lưu các thông tin khác vào Realtime Database
+                                    userRef.child("name").setValue(name);
+                                    userRef.child("email").setValue(email);
+                                    userRef.child("role").setValue(role);
+                                    Toast.makeText(activity, "Authentication success", Toast.LENGTH_SHORT).show();
+                                    activity.startActivity(new Intent(activity, HomeActivity.class));
+                                } else {
+                                    Toast.makeText(activity, "Failed to save user information", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }).addOnFailureListener(exception -> {
+                    // Xử lý khi không lấy được URL của hình ảnh trong Firebase Storage
+                    Toast.makeText(activity, "Failed to get avatar URL", Toast.LENGTH_SHORT).show();
+                });
             }).addOnFailureListener(exception -> {
-                // Xử lý khi không tải được nội dung của `default.jpg`
-                Toast.makeText(activity, "Failed to load default avatar", Toast.LENGTH_SHORT).show();
+                // Xử lý khi không lưu được hình ảnh vào Firebase Storage
+                Toast.makeText(activity, "Failed to save avatar image", Toast.LENGTH_SHORT).show();
             });
+        }).addOnFailureListener(exception -> {
+            // Xử lý khi không tải được nội dung của `default.jpg`
+            Toast.makeText(activity, "Failed to load default avatar", Toast.LENGTH_SHORT).show();
+        });
     }
-
 
     private void showOTPVerificationDialog(String verificationId, String phone){
         OTPVerificationDialog otpVerificationDialog = new OTPVerificationDialog(activity, verificationId, phone);

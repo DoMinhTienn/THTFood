@@ -6,9 +6,9 @@ public class User {
     private String name;
     private String email;
     private String role;
-    private Uri avatar_path;
+    private String avatar_path;
 
-    public User(String name, String email, String role, Uri avatar_path) {
+    public User(String name, String email, String role, String avatar_path) {
         this.name = name;
         this.email = email;
         this.role = role;
@@ -41,11 +41,11 @@ public class User {
     }
 
 
-    public Uri getAvatar_path() {
+    public String getAvatar_path() {
         return avatar_path;
     }
 
-    public void setAvatar_path(Uri avatar_path) {
+    public void setAvatar_path(String avatar_path) {
         this.avatar_path = avatar_path;
     }
 }
