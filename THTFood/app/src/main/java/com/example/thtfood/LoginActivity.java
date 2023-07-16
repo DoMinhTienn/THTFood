@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText edittextInputPhone;
 
-    private Button buttonLogin;
+    private Button btnLogin;
     private ImageButton imagebuttonquit;
 
     private  String phone;
@@ -46,20 +46,14 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         edittextInputPhone = findViewById(R.id.textInputPhone);
-        buttonLogin = findViewById(R.id.btnLogin);
+        btnLogin = findViewById(R.id.btnLogin);
         imagebuttonquit = findViewById(R.id.imageButtonQuit);
         mAuth = FirebaseAuth.getInstance();
         authenticationManager = new AuthenticationManager(this);
 
-        imagebuttonquit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                startActivity(intent);
-            }
-        });
+
         edittextInputPhone.addTextChangedListener(textWatcher);
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 phone = edittextInputPhone.getText().toString().trim();
@@ -83,10 +77,10 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void afterTextChanged(Editable s) {
             if (s.length() > 0){
-                buttonLogin.setBackgroundResource(R.drawable.round_back_red_100);
+                btnLogin.setBackgroundResource(R.drawable.round_back_red_100);
             }
             else{
-                buttonLogin.setBackgroundResource(R.drawable.round_back_brown_100);
+                btnLogin.setBackgroundResource(R.drawable.round_back_brown_100);
             }
         }
     };
