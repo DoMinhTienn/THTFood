@@ -5,13 +5,13 @@ import android.net.Uri;
 public class User {
     private String name;
     private String email;
-    private String password;
+    private String role;
     private Uri avatar_path;
 
-    public User(String name, String email, String password, Uri avatar_path) {
+    public User(String name, String email, String role, Uri avatar_path) {
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.role = role;
         this.avatar_path = avatar_path;
     }
 
@@ -32,12 +32,12 @@ public class User {
     }
 
 
-    public String getPassword() {
-        return password;
+    public String getRole() {
+        return role;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setRole(String role) {
+        this.role = role;
     }
 
 
