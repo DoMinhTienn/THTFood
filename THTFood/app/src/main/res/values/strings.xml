@@ -2,7 +2,6 @@
     <string name="app_name">THT Food</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="password">Password</string>
     <string name="phone">Số Điện Thoại</string>
     <string name="noti">Với việc đăng ký tài khoản, Bạn đã chấp nhận các chính sách và điều khoản sử dụng của chúng tôi.</string>
 </resources>
