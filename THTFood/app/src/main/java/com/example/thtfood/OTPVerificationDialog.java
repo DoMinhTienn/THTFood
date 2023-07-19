@@ -42,7 +42,7 @@ public class OTPVerificationDialog extends Dialog {
     private final String verificationId;
 
     public interface OTPVerificationListener {
-        void onVerificationCompleted(PhoneAuthCredential credential);
+        void onVerificationCompleted(String code);
     }
     private OTPVerificationListener verificationListener;
 
@@ -101,9 +101,8 @@ public class OTPVerificationDialog extends Dialog {
                 final String getOtp = otp1.getText().toString() + otp2.getText().toString() + otp3.getText().toString() + otp4.getText().toString() + otp5.getText().toString() + otp6.getText().toString();
 
                 if (getOtp.length() == 6){
-                    PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, getOtp);
                     if (verificationListener != null) {
-                        verificationListener.onVerificationCompleted(credential);
+                        verificationListener.onVerificationCompleted(getOtp);
                     }
                     dismiss();
                 };
@@ -211,9 +210,5 @@ public class OTPVerificationDialog extends Dialog {
             return super.onKeyUp(keyCode, event);
         }
     }
-    private void singinbyCredential(PhoneAuthCredential credential) {
-        if (verificationListener != null) {
-            verificationListener.onVerificationCompleted(credential);
-        }
-    }
+
 }

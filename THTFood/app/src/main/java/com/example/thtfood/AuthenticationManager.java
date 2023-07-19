@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
@@ -121,7 +123,14 @@ public class AuthenticationManager {
                     });
                 }
             }
-        });
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Loi", "LOI DANG NHAP");
+                        otp
+                    }
+                });
     }
     private void saveUser(DatabaseReference userRef, String userId) {
         String name = user_register.getName();
@@ -171,8 +180,8 @@ public class AuthenticationManager {
         OTPVerificationDialog otpVerificationDialog = new OTPVerificationDialog(activity, verificationId, phone);
         otpVerificationDialog.setVerificationListener(new OTPVerificationDialog.OTPVerificationListener() {
             @Override
-            public void onVerificationCompleted(PhoneAuthCredential credential) {
-                singinbyCredential(credential);
+            public void onVerificationCompleted(String code) {
+               verifycode(code);
             }
         });
         otpVerificationDialog.show();
