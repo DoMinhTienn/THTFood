@@ -35,6 +35,7 @@ public class AuthenticationManager {
     private User user_register;
     private String phone;
     String vertificationId;
+     private OTPVerificationDialog otpVerificationDialog;
 
     public  AuthenticationManager(Activity activity) {
         this.activity = activity;
@@ -127,8 +128,9 @@ public class AuthenticationManager {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        otpVerificationDialog.handleAuthenticationFailed();
                         Log.d("Loi", "LOI DANG NHAP");
-                        otp
+
                     }
                 });
     }
@@ -177,12 +179,13 @@ public class AuthenticationManager {
     }
 
     private void showOTPVerificationDialog(String verificationId, String phone){
-        OTPVerificationDialog otpVerificationDialog = new OTPVerificationDialog(activity, verificationId, phone);
+        otpVerificationDialog = new OTPVerificationDialog(activity, verificationId, phone);
         otpVerificationDialog.setVerificationListener(new OTPVerificationDialog.OTPVerificationListener() {
             @Override
             public void onVerificationCompleted(String code) {
                verifycode(code);
             }
+
         });
         otpVerificationDialog.show();
     }

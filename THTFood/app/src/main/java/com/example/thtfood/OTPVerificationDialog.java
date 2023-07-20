@@ -104,7 +104,6 @@ public class OTPVerificationDialog extends Dialog {
                     if (verificationListener != null) {
                         verificationListener.onVerificationCompleted(getOtp);
                     }
-                    dismiss();
                 };
             }
         });
@@ -211,4 +210,16 @@ public class OTPVerificationDialog extends Dialog {
         }
     }
 
+    public void handleAuthenticationFailed(){
+        otp1.setText("");
+        otp2.setText("");
+        otp3.setText("");
+        otp4.setText("");
+        otp5.setText("");
+        otp6.setText("");
+        selectedOTPposition = 0;
+        showKeyboard(otp1);
+        Toast.makeText(getContext(),"Lỗi xác thực", Toast.LENGTH_SHORT).show();
+
+    }
 }

@@ -141,7 +141,7 @@
         android:layout_height="45dp"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
-        android:background="@drawable/round_back_red_100"
+        android:background="@drawable/round_back_brown_100"
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
         android:text="Xác Nhận"
