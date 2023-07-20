@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,6 +32,7 @@ public class InfoAccountActivity extends AppCompatActivity {
 
         etName = findViewById(R.id.textInputName);
         etEmail = findViewById(R.id.textInputEmail);
+        btnconfirm = findViewById(R.id.btnConfirm);
 
         autoCompleteTextView = findViewById(R.id.dropdown_role);
         adapterRole = new ArrayAdapter<>(this, R.layout.list_role, roleUser);
@@ -39,10 +42,9 @@ public class InfoAccountActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View v, int i, long l) {
                 role = String.valueOf(i);
+                checkFieldsValidity();
             }
         });
-
-        btnconfirm = findViewById(R.id.btnConfirm);
         btnconfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,5 +57,30 @@ public class InfoAccountActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        btnconfirm.setEnabled(false);
+    }
+
+
+    private void checkFieldsValidity() {
+        // Check if name, email, and role are not empty
+        boolean nameValid = !etName.getText().toString().trim().isEmpty();
+        boolean emailValid = isValidGmail(etEmail.getText().toString().trim());
+        boolean roleValid = !role.isEmpty();
+
+        boolean allFieldsValid = nameValid && emailValid && roleValid;
+        btnconfirm.setEnabled(allFieldsValid);
+        if (allFieldsValid) {
+            btnconfirm.setBackgroundResource(R.drawable.round_back_red_100);
+        } else {
+            btnconfirm.setBackgroundResource(R.drawable.round_back_brown_100);
+        }
+    }
+
+    private boolean isValidGmail(String email) {
+        // Regular expression pattern for validating Gmail addresses
+        String gmailPattern = "[a-zA-Z0-9._%+-]+@gmail\\.com$";
+
+        // Check if the email matches the Gmail pattern
+        return email.matches(gmailPattern);
     }
 }
