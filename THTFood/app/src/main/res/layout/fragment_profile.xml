@@ -11,270 +11,257 @@
         android:layout_height="match_parent"
         android:padding="10dp"
         tools:ignore="ExtraText">
+
         <ScrollView
+            android:id="@+id/scrollView2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="10dp"
+            tools:layout_editor_absoluteY="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                tools:layout_editor_absoluteX="-26dp"
-                tools:layout_editor_absoluteY="0dp">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
-                    <ImageView
-                        android:id="@+id/profile_image"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:scaleType="centerCrop"
-                        tools:ignore="MissingConstraints"
-                        tools:src="@tools:sample/avatars" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/textView6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="96dp"
-                        android:layout_marginTop="16dp"
-                        android:text="Tên USER"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        <ImageView
+                            android:id="@+id/profile_image"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:scaleType="centerCrop"
+                            tools:ignore="MissingConstraints"
+                            tools:src="@tools:sample/avatars" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/textView6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="96dp"
+                            android:layout_marginTop="16dp"
+                            android:text="Tên USER"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </FrameLayout>
+
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="643dp">
+                    android:layout_height="match_parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
 
-                    <Button
-                        android:id="@+id/button"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="left|center_vertical"
-                        android:text="Giới thiệu                                                                        "
-                        android:textColor="@color/black"
-                        app:backgroundTint="@android:color/transparent"
-                        app:layout_constraintEnd_toEndOf="@+id/button11"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="@+id/button11"
-                        app:layout_constraintTop_toBottomOf="@+id/button3" />
+                        <TextView
+                            android:id="@+id/title_Pro1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30dp"
+                            android:text="Ưu đãi tiết kiệm"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="MissingConstraints" />
 
-                    <Button
-                        android:id="@+id/button4"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Giới thiệu                                                                        "
-                        android:textColor="@color/black"
-                        app:backgroundTint="@android:color/transparent"
-                        android:gravity="left|center_vertical"
-                        app:layout_constraintEnd_toEndOf="@+id/button11"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="@+id/button11"
-                        app:layout_constraintTop_toBottomOf="@+id/button" />
+                        <Button
+                            android:id="@+id/button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:gravity="left"
+                            android:text="Giới thiệu"
+                            android:textColor="@color/black"
+                            app:backgroundTint="@android:color/transparent"
+                            app:drawableEndCompat="@drawable/baseline_chevron_right_24"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/title_Pro1" />
 
-                    <Button
-                        android:id="@+id/button5"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Giới thiệu                                                                        "
-                        android:textColor="@color/black"
-                        app:backgroundTint="@android:color/transparent"
-                        android:gravity="left|center_vertical"
-                        app:layout_constraintEnd_toEndOf="@+id/button11"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="@+id/button11"
-                        app:layout_constraintTop_toBottomOf="@+id/button4" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/gray"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/button" />
 
-                    <Button
-                        android:id="@+id/button3"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="Giới thiệu                                                                       "
-                        android:textColor="@color/black"
-                        app:backgroundTint="@android:color/transparent"
-                        android:gravity="left|center_vertical"
-                        app:layout_constraintEnd_toEndOf="@+id/button11"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="@+id/button11"
-                        app:layout_constraintTop_toBottomOf="@+id/title_Pro2" />
+                        <Button
+                            android:id="@+id/button1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:gravity="left"
+                            android:text="Giới thiệu"
+                            android:textColor="@color/black"
+                            app:backgroundTint="@android:color/transparent"
+                            app:drawableEndCompat="@drawable/baseline_chevron_right_24"
+                            app:layout_constraintTop_toBottomOf="@+id/button" />
 
-                    <TextView
-                        android:id="@+id/title_Pro1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="25dp"
-                        android:text="Ưu đãi tiết kiệm"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/gray"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/button1" />
 
-                    <TextView
-                        android:id="@+id/title_Pro2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="25dp"
-                        android:text="Tài khoản của tôi"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/button12" />
+                        <Button
+                            android:id="@+id/button2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:gravity="left"
+                            android:text="Giới thiệu"
+                            android:textColor="@color/black"
+                            app:backgroundTint="@android:color/transparent"
+                            app:drawableEndCompat="@drawable/baseline_chevron_right_24"
+                            app:layout_constraintTop_toBottomOf="@+id/button1" />
 
-                    <Button
-                        android:id="@+id/button8"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Rewards                                                                        "
-                        android:textColor="@color/black"
-                        app:backgroundTint="@android:color/transparent"
-                        android:gravity="left|center_vertical"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/title_Pro1" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/gray"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/button2" />
 
-                    <Button
-                        android:id="@+id/button10"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Gói hội viên                                                                   "
-                        android:textColor="@color/black"
-                        app:backgroundTint="@android:color/transparent"
-                        android:gravity="left|center_vertical"
-                        app:layout_constraintEnd_toEndOf="@+id/button8"
-                        app:layout_constraintStart_toStartOf="@+id/button8"
-                        app:layout_constraintTop_toBottomOf="@+id/button8" />
+                        <Button
+                            android:id="@+id/button3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:gravity="left"
+                            android:text="Giới thiệu"
+                            android:textColor="@color/black"
+                            app:backgroundTint="@android:color/transparent"
+                            app:drawableEndCompat="@drawable/baseline_chevron_right_24"
+                            app:layout_constraintTop_toBottomOf="@+id/button2" />
 
-                    <Button
-                        android:id="@+id/button11"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Thử thách                                                                      "
-                        android:textColor="@color/black"
-                        app:backgroundTint="@android:color/transparent"
-                        android:gravity="left|center_vertical"
-                        app:layout_constraintEnd_toEndOf="@+id/button10"
-                        app:layout_constraintStart_toStartOf="@+id/button10"
-                        app:layout_constraintTop_toBottomOf="@+id/button10" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/gray"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/button3" />
 
-                    <Button
-                        android:id="@+id/button12"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Giới thiệu                                                                       "
-                        android:textColor="@color/black"
-                        app:backgroundTint="@android:color/transparent"
-                        android:gravity="left|center_vertical"
-                        app:layout_constraintEnd_toEndOf="@+id/button11"
-                        app:layout_constraintStart_toStartOf="@+id/button11"
-                        app:layout_constraintTop_toBottomOf="@+id/button11" />
+                        <TextView
+                            android:id="@+id/title_Pro2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30dp"
+                            android:text="Tài Khoản của bạn"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            app:layout_constraintTop_toBottomOf="@+id/button3"
+                            tools:ignore="MissingConstraints" />
 
-                    <ImageView
-                        android:id="@+id/imageView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="16dp"
-                        android:src="@drawable/baseline_chevron_right_24"
-                        app:layout_constraintEnd_toEndOf="@+id/button8"
-                        app:layout_constraintTop_toBottomOf="@+id/title_Pro1"
-                        tools:ignore="MissingConstraints" />
+                        <Button
+                            android:id="@+id/button4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:gravity="left"
+                            android:text="Giới thiệu"
+                            android:textColor="@color/black"
+                            app:backgroundTint="@android:color/transparent"
+                            app:drawableEndCompat="@drawable/baseline_chevron_right_24"
+                            app:layout_constraintTop_toBottomOf="@+id/title_Pro2" />
 
-                    <ImageView
-                        android:id="@+id/imageView8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="16dp"
-                        android:src="@drawable/baseline_chevron_right_24"
-                        app:layout_constraintEnd_toEndOf="@+id/button10"
-                        app:layout_constraintTop_toBottomOf="@+id/button8" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/gray"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/button4" />
 
-                    <ImageView
-                        android:id="@+id/imageView9"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="16dp"
-                        android:src="@drawable/baseline_chevron_right_24"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/button10" />
+                        <Button
+                            android:id="@+id/button5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:gravity="left"
+                            android:text="Giới thiệu"
+                            android:textColor="@color/black"
+                            app:backgroundTint="@android:color/transparent"
+                            app:drawableEndCompat="@drawable/baseline_chevron_right_24"
+                            app:layout_constraintTop_toBottomOf="@+id/button4" />
 
-                    <ImageView
-                        android:id="@+id/imageView10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="16dp"
-                        android:src="@drawable/baseline_chevron_right_24"
-                        app:layout_constraintEnd_toEndOf="@+id/button12"
-                        app:layout_constraintTop_toBottomOf="@+id/button11" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/gray"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/button5" />
 
-                    <Button
-                        android:id="@+id/buttonQuite"
-                        android:layout_width="300dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp"
-                        android:background="@drawable/button_background"
-                        android:text="Đăng Xuất"
-                        app:backgroundTint="@null"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/button5"
-                        tools:ignore="MissingConstraints" />
+                        <Button
+                            android:id="@+id/button6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:gravity="left"
+                            android:text="Giới thiệu"
+                            android:textColor="@color/black"
+                            app:backgroundTint="@android:color/transparent"
+                            app:drawableEndCompat="@drawable/baseline_chevron_right_24"
+                            app:layout_constraintTop_toBottomOf="@+id/button5" />
 
-                    <ImageView
-                        android:id="@+id/imageView11"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="16dp"
-                        android:src="@drawable/baseline_chevron_right_24"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/button3" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/gray"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/button6" />
 
-                    <ImageView
-                        android:id="@+id/imageView12"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="16dp"
-                        android:src="@drawable/baseline_chevron_right_24"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/button" />
 
-                    <ImageView
-                        android:id="@+id/imageView13"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="16dp"
-                        android:src="@drawable/baseline_chevron_right_24"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/button" />
+                        <Button
+                            android:id="@+id/button7"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:gravity="left"
+                            android:text="Giới thiệu"
+                            android:textColor="@color/black"
+                            app:backgroundTint="@android:color/transparent"
+                            app:drawableEndCompat="@drawable/baseline_chevron_right_24"
+                            app:layout_constraintTop_toBottomOf="@+id/button6" />
 
-                    <ImageView
-                        android:id="@+id/imageView14"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="16dp"
-                        android:src="@drawable/baseline_chevron_right_24"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/button4" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/gray"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/button7" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <Button
+                            android:id="@+id/buttonQuite"
+                            android:layout_width="250dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@drawable/button_background"
+                            android:text="Đăng Xuất"
+                            app:backgroundTint="@null"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/button7" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </FrameLayout>
+
             </LinearLayout>
         </ScrollView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
