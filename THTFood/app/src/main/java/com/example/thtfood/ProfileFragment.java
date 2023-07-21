@@ -1,5 +1,6 @@
 package com.example.thtfood;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,7 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class ProfileFragment extends Fragment {
     FirebaseAuth mAuth;
 
-    TextView tv1, tv2, tv3, tv4;
+    TextView tv1;
     Button logout;
     private ImageView avatar;
 
@@ -71,23 +72,19 @@ public class ProfileFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        logout = view.findViewById(R.id.button);
+        logout = view.findViewById(R.id.buttonQuite);
         tv1 = view.findViewById(R.id.textView6);
-        tv2 = view.findViewById(R.id.textView8);
-        tv3 = view.findViewById(R.id.textView7);
-        tv4 = view.findViewById(R.id.textView9);
-        avatar = view.findViewById(R.id.imageView2);
+        avatar = view.findViewById(R.id.profile_image);
 
         User user = UserManager.getInstance().getUser();
         if (user != null) {
             String userName = user.getName();
-            String userEmail = user.getEmail();
-            String userRole = user.getRole();
            String userAvatarPath = user.getAvatar_path();
 
             RequestOptions options = new RequestOptions()
@@ -99,10 +96,7 @@ public class ProfileFragment extends Fragment {
             Glide.with(this).load(userAvatarPath).into(avatar);
 
             tv1.setText(userName);
-            tv2.setText(userEmail);
-            tv3.setText(userRole);
         }
-
             logout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -110,6 +104,6 @@ public class ProfileFragment extends Fragment {
                     startActivity(new Intent(getContext(), MainActivity.class));
                 }
             });
-            return view;
+        return view;
         }
 }
