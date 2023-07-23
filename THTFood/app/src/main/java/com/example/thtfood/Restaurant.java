@@ -3,15 +3,24 @@ package com.example.thtfood;
 public class Restaurant {
     private String name;
     private String avatar_path;
+    private Address address;
+    private boolean isActive;
 
-    private String address;
 
-    public Restaurant(String name, String avatar_path, String address) {
+
+    public Restaurant(String name, String avatar_path, Address address, boolean isActive) {
         this.name = name;
         this.avatar_path = avatar_path;
         this.address = address;
+        this.isActive = isActive;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 
     public String getName() {
         return name;
@@ -29,12 +38,11 @@ public class Restaurant {
         this.avatar_path = avatar_path;
     }
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
-
 }

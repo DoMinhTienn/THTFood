@@ -4,15 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class InfoAccountActivity extends AppCompatActivity {
     String[] roleUser = {"Khách", "Người bán hàng"};
@@ -35,7 +32,7 @@ public class InfoAccountActivity extends AppCompatActivity {
         btnconfirm = findViewById(R.id.btnConfirm);
 
         autoCompleteTextView = findViewById(R.id.dropdown_role);
-        adapterRole = new ArrayAdapter<>(this, R.layout.list_role, roleUser);
+        adapterRole = new ArrayAdapter<>(this, R.layout.list, roleUser);
         autoCompleteTextView.setAdapter(adapterRole);
 
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

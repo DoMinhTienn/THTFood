@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -18,6 +21,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,7 +34,7 @@ import com.google.firebase.auth.FirebaseAuth;
  */
 public class ProfileFragment extends Fragment {
     FirebaseAuth mAuth;
-
+    private boolean isRestaurant = false;
     TextView tv1;
     Button logout;
     private ImageView avatar;
@@ -85,6 +93,7 @@ public class ProfileFragment extends Fragment {
         User user = UserManager.getInstance().getUser();
         if (user != null) {
             String userName = user.getName();
+            String role = user.getRole();
            String userAvatarPath = user.getAvatar_path();
 
             RequestOptions options = new RequestOptions()
@@ -105,5 +114,66 @@ public class ProfileFragment extends Fragment {
                 }
             });
         return view;
+        }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Gọi hàm handleDisplay() trong onViewCreated() thay vì onCreateView()
+        handleDisplay();
+    }
+
+        private void handleDisplay() {
+            checkRestaurant();
+            View v = getView();
+            Button button4 = v.findViewById(R.id.button4);
+            Button button5 = v.findViewById(R.id.button5);
+            Button button6 = v.findViewById(R.id.button6);
+            Button button7 = v.findViewById(R.id.button7);
+            Button buttonQuite = v.findViewById(R.id.buttonQuite);
+            User user = UserManager.getInstance().getUser();
+            if (user != null && "1".equals(user.getRole())) {
+                {
+                    if(!isRestaurant){
+                        button5.setVisibility(View.GONE);
+                        button6.setVisibility(View.GONE);
+                        button7.setVisibility(View.GONE);
+                        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) buttonQuite.getLayoutParams();
+                        layoutParams.topToBottom = R.id.button4; // Đặt buttonQuite nằm dưới button4
+                        buttonQuite.setLayoutParams(layoutParams);
+                        button4.setText("Tạo nhà hàng");
+                        button4.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(getActivity(), CreateRestaurantAcittivity.class));
+                            }
+                        });
+                    }
+
+                }
+            }
+        }
+
+        private void checkRestaurant(){
+            String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants");
+
+            restaurantsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                        if (currentUserId != null && currentUserId.equals(currentUserId)) {
+                            isRestaurant = true;
+                            break;
+                        }
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+
+
         }
 }
