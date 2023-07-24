@@ -8,6 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DataSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +27,10 @@ public class HomeFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     LinearLayout horizontalLayout;
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference restaurantsRef = database.getReference("restaurants");
+    List<Restaurant> restaurantList = new ArrayList<>();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -60,6 +70,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Tạo View cho Fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -90,6 +101,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         return view;
     }
+
 
 
 }
