@@ -1,4 +1,4 @@
-package com.example.thtfood;
+package com.example.thtfood.Controller;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -6,15 +6,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.thtfood.Model.Product;
+import com.example.thtfood.R;
+
 import java.util.List;
 
 
 // ProductAdapter.java
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
-    private List<ProductModel> productList;
+    private List<Product> productList;
 
-    public ProductAdapter(List<ProductModel> productList) {
+    public ProductAdapter(List<Product> productList) {
         this.productList = productList;
     }
 
@@ -27,7 +31,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
-        ProductModel product = productList.get(position);
+        Product product = productList.get(position);
         holder.textViewProductName.setText(product.getName());
         holder.textViewProductPrice.setText(String.valueOf(product.getPrice()));
         // Cài đặt hình ảnh sản phẩm vào ImageView nếu có

@@ -1,11 +1,11 @@
 // ProductModel.java
-package com.example.thtfood;
-public class ProductModel {
+package com.example.thtfood.Model;
+public class Product {
     private String name;
     private double price;
     // Thêm các thuộc tính khác nếu cần thiết
 
-    public ProductModel(String name, double price) {
+    public Product(String name, double price) {
         this.name = name;
         this.price = price;
     }
