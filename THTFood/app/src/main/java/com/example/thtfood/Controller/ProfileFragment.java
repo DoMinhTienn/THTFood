@@ -1,8 +1,7 @@
-package com.example.thtfood;
+package com.example.thtfood.Controller;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,16 +15,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.thtfood.Model.User;
+import com.example.thtfood.Model.UserManager;
+import com.example.thtfood.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -120,12 +116,10 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Gọi hàm handleDisplay() trong onViewCreated() thay vì onCreateView()
         handleDisplay();
     }
 
         private void handleDisplay() {
-            checkRestaurant();
             View v = getView();
             Button button4 = v.findViewById(R.id.button4);
             Button button5 = v.findViewById(R.id.button5);
@@ -135,45 +129,27 @@ public class ProfileFragment extends Fragment {
             User user = UserManager.getInstance().getUser();
             if (user != null && "1".equals(user.getRole())) {
                 {
-                    if(!isRestaurant){
-                        button5.setVisibility(View.GONE);
-                        button6.setVisibility(View.GONE);
-                        button7.setVisibility(View.GONE);
-                        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) buttonQuite.getLayoutParams();
-                        layoutParams.topToBottom = R.id.button4; // Đặt buttonQuite nằm dưới button4
-                        buttonQuite.setLayoutParams(layoutParams);
-                        button4.setText("Tạo nhà hàng");
-                        button4.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                startActivity(new Intent(getActivity(), CreateRestaurantAcittivity.class));
-                            }
-                        });
-                    }
-
+                    RestaurantHelper.checkRestaurant(isRestaurant -> {
+                        // Xử lý kết quả trả về tùy thuộc vào giá trị của isRestaurant
+                        if (isRestaurant) {
+                            // Đã là nhà hàng
+                        } else {
+                            button5.setVisibility(View.GONE);
+                            button6.setVisibility(View.GONE);
+                            button7.setVisibility(View.GONE);
+                            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) buttonQuite.getLayoutParams();
+                            layoutParams.topToBottom = R.id.button4; // Đặt buttonQuite nằm dưới button4
+                            buttonQuite.setLayoutParams(layoutParams);
+                            button4.setText("Tạo nhà hàng");
+                            button4.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    startActivity(new Intent(getActivity(), CreateRestaurantAcittivity.class));
+                                }
+                            });
+                        }
+                    });
                 }
             }
-        }
-
-        private void checkRestaurant(){
-            String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants");
-
-            restaurantsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                        if (currentUserId != null && currentUserId.equals(currentUserId)) {
-                            isRestaurant = true;
-                            break;
-                        }
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                }
-            });
-
-
         }
 }

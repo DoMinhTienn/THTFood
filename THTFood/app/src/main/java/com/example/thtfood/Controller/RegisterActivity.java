@@ -1,4 +1,4 @@
-package com.example.thtfood;
+package com.example.thtfood.Controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,15 +7,13 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.thtfood.Model.User;
+import com.example.thtfood.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterActivity extends AppCompatActivity {

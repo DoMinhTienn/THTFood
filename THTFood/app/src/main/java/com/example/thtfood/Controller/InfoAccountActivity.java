@@ -1,4 +1,4 @@
-package com.example.thtfood;
+package com.example.thtfood.Controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.example.thtfood.R;
 
 public class InfoAccountActivity extends AppCompatActivity {
     String[] roleUser = {"Khách", "Người bán hàng"};

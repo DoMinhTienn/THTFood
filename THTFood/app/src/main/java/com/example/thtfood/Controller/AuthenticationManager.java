@@ -1,14 +1,14 @@
-package com.example.thtfood;
+package com.example.thtfood.Controller;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
-import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.thtfood.Model.User;
+import com.example.thtfood.Model.UserManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -164,6 +164,8 @@ public class AuthenticationManager {
                                     Toast.makeText(activity, "Failed to save user information", Toast.LENGTH_SHORT).show();
                                 }
                             });
+                    User user = new  User(name, email, role, avatarUrl);
+                    UserManager.getInstance().setUser(user);
                 }).addOnFailureListener(exception -> {
                     // Xử lý khi không lấy được URL của hình ảnh trong Firebase Storage
                     Toast.makeText(activity, "Failed to get avatar URL", Toast.LENGTH_SHORT).show();
@@ -176,6 +178,7 @@ public class AuthenticationManager {
             // Xử lý khi không tải được nội dung của `default.jpg`
             Toast.makeText(activity, "Failed to load default avatar", Toast.LENGTH_SHORT).show();
         });
+
     }
 
     private void showOTPVerificationDialog(String verificationId, String phone){
