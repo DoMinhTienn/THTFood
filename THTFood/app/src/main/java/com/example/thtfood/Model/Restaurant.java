@@ -1,4 +1,6 @@
-package com.example.thtfood;
+package com.example.thtfood.Model;
+
+import com.example.thtfood.Model.Address;
 
 public class Restaurant {
     private String name;

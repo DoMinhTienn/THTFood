@@ -1,4 +1,4 @@
-package com.example.thtfood;
+package com.example.thtfood.Model;
 
 import android.net.Uri;
 

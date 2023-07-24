@@ -1,4 +1,4 @@
-package com.example.thtfood;
+package com.example.thtfood.Controller;
 
 import android.os.Bundle;
 
@@ -14,6 +14,8 @@ import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.thtfood.R;
 
 /**
  * A simple {@link Fragment} subclass.

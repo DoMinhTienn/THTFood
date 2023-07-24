@@ -1,4 +1,4 @@
-package com.example.thtfood;
+package com.example.thtfood.Model;
 
 public class Address {
     private String number;
