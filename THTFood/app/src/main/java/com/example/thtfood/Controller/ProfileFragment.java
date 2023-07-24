@@ -22,6 +22,8 @@ import com.example.thtfood.Model.User;
 import com.example.thtfood.Model.UserManager;
 import com.example.thtfood.R;
 import com.google.firebase.auth.FirebaseAuth;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,6 +78,7 @@ public class ProfileFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
     }
 
+
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -102,13 +105,29 @@ public class ProfileFragment extends Fragment {
 
             tv1.setText(userName);
         }
-            logout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mAuth.signOut();
-                    startActivity(new Intent(getContext(), MainActivity.class));
-                }
-            });
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialog;
+                alertDialog = new AlertDialog.Builder(getContext());
+                alertDialog.setMessage(getString(R.string.LogoutDialog));
+                alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mAuth.signOut();
+                        startActivity(new Intent(getContext(), MainActivity.class));
+                    }
+                });
+                alertDialog.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog alert=alertDialog.create();
+                alert.show();
+            }
+        });
         return view;
         }
 

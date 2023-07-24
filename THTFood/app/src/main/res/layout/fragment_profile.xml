@@ -32,14 +32,22 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <ImageView
-                            android:id="@+id/profile_image"
+                        <FrameLayout
                             android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:scaleType="centerCrop"
-                            tools:ignore="MissingConstraints"
-                            tools:src="@tools:sample/avatars" />
+                            android:layout_height="81dp"
+                            tools:ignore="MissingConstraints">
 
+                            <ImageView
+                                android:id="@+id/profile_image"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:scaleType="centerCrop"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                tools:ignore="MissingConstraints"
+                                tools:layout_editor_absoluteX="0dp"
+                                tools:src="@tools:sample/avatars" />
+
+                        </FrameLayout>
                         <TextView
                             android:id="@+id/textView6"
                             android:layout_width="wrap_content"
@@ -51,6 +59,18 @@
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageButton
+                            android:id="@+id/choose_image_button"
+                            android:layout_width="38dp"
+                            android:layout_height="31dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="168dp"
+                            android:background="@android:color/transparent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/baseline_edit_24"
+                            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </FrameLayout>
