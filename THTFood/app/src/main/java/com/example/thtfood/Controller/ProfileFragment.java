@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -34,6 +35,8 @@ public class ProfileFragment extends Fragment {
     TextView tv1;
     Button logout;
     private ImageView avatar;
+
+    User user = UserManager.getInstance().getUser();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -74,6 +77,7 @@ public class ProfileFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         mAuth = FirebaseAuth.getInstance();
+
     }
 
     @SuppressLint("MissingInflatedId")
@@ -86,31 +90,30 @@ public class ProfileFragment extends Fragment {
         tv1 = view.findViewById(R.id.textView6);
         avatar = view.findViewById(R.id.profile_image);
 
-        User user = UserManager.getInstance().getUser();
         if (user != null) {
             String userName = user.getName();
             String role = user.getRole();
-           String userAvatarPath = user.getAvatar_path();
+            String userAvatarPath = user.getAvatar_path();
 
             RequestOptions options = new RequestOptions()
                     .override(40, 40)
                     .fitCenter()
-            .skipMemoryCache(true)  // Thêm dòng này để vô hiệu hóa cache
+                    .skipMemoryCache(true)  // Thêm dòng này để vô hiệu hóa cache
                     .diskCacheStrategy(DiskCacheStrategy.NONE);  // Vô hiệu hóa cache trên ổ đĩa
 
             Glide.with(this).load(userAvatarPath).into(avatar);
 
             tv1.setText(userName);
         }
-            logout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mAuth.signOut();
-                    startActivity(new Intent(getContext(), MainActivity.class));
-                }
-            });
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                startActivity(new Intent(getContext(), MainActivity.class));
+            }
+        });
         return view;
-        }
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -119,37 +122,36 @@ public class ProfileFragment extends Fragment {
         handleDisplay();
     }
 
-        private void handleDisplay() {
-            View v = getView();
-            Button button4 = v.findViewById(R.id.button4);
-            Button button5 = v.findViewById(R.id.button5);
-            Button button6 = v.findViewById(R.id.button6);
-            Button button7 = v.findViewById(R.id.button7);
-            Button buttonQuite = v.findViewById(R.id.buttonQuite);
-            User user = UserManager.getInstance().getUser();
-            if (user != null && "1".equals(user.getRole())) {
-                {
-                    RestaurantHelper.checkRestaurant(isRestaurant -> {
-                        // Xử lý kết quả trả về tùy thuộc vào giá trị của isRestaurant
-                        if (isRestaurant) {
-                            // Đã là nhà hàng
-                        } else {
-                            button5.setVisibility(View.GONE);
-                            button6.setVisibility(View.GONE);
-                            button7.setVisibility(View.GONE);
-                            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) buttonQuite.getLayoutParams();
-                            layoutParams.topToBottom = R.id.button4; // Đặt buttonQuite nằm dưới button4
-                            buttonQuite.setLayoutParams(layoutParams);
-                            button4.setText("Tạo nhà hàng");
-                            button4.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    startActivity(new Intent(getActivity(), CreateRestaurantAcittivity.class));
-                                }
-                            });
-                        }
-                    });
-                }
+    private void handleDisplay() {
+        View v = getView();
+        Button button4 = v.findViewById(R.id.button4);
+        Button button5 = v.findViewById(R.id.button5);
+        Button button6 = v.findViewById(R.id.button6);
+        Button button7 = v.findViewById(R.id.button7);
+        Button buttonQuite = v.findViewById(R.id.buttonQuite);
+        if (user != null && "1".equals(user.getRole())) {
+            {
+                RestaurantHelper.checkRestaurant(isRestaurant -> {
+                    // Xử lý kết quả trả về tùy thuộc vào giá trị của isRestaurant
+                    if (isRestaurant) {
+                        // Đã là nhà hàng
+                    } else {
+                        button5.setVisibility(View.GONE);
+                        button6.setVisibility(View.GONE);
+                        button7.setVisibility(View.GONE);
+                        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) buttonQuite.getLayoutParams();
+                        layoutParams.topToBottom = R.id.button4; // Đặt buttonQuite nằm dưới button4
+                        buttonQuite.setLayoutParams(layoutParams);
+                        button4.setText("Tạo nhà hàng");
+                        button4.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(getActivity(), CreateRestaurantAcittivity.class));
+                            }
+                        });
+                    }
+                });
             }
         }
+    }
 }
