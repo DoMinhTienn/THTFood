@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CreateRestaurantAcittivity extends AppCompatActivity {
-    private static final int REQUEST_IMAGE_GET = 1;
+    public static final int REQUEST_IMAGE_GET = 1;
     private Button btnChooseImage, btnRegister;
     private TextView imageName;
     private Map<String, List<String>> districtMap = new HashMap<>();
