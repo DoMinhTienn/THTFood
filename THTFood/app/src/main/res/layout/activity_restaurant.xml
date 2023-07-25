@@ -49,11 +49,12 @@
                         android:src="@drawable/baseline_home_24" />
 
                     <TextView
+                        android:id="@+id/nameRes"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginLeft="10dp"
                         android:paddingLeft="10dp"
-                        android:paddingTop="10dp"
+                        android:paddingTop="8dp"
                         android:text="Nhà Hàng Nam Bộ"
                         android:textSize="25dp"
                         android:textStyle="bold" />
@@ -81,11 +82,12 @@
                         android:src="@drawable/baseline_account_circle_24" />
 
                     <TextView
+                        android:id="@+id/adressRes"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:paddingLeft="10dp"
-                        android:paddingTop="15dp"
+                        android:paddingTop="12dp"
                         android:text=" (2K) Đánh giá và nhận xét"
                         android:textSize="18dp" />
 
@@ -120,8 +122,8 @@
                         android:layout_height="50dp"
                         android:layout_marginLeft="10dp"
                         android:paddingLeft="10dp"
-                        android:paddingTop="15dp"
-                        android:text="Ngôn ngữ thực đơn"
+                        android:paddingTop="12dp"
+                        android:text=" (2K) Đánh giá và nhận xét"
                         android:textSize="18dp" />
 
 
@@ -154,9 +156,9 @@
                         android:layout_height="50dp"
                         android:layout_marginLeft="10dp"
                         android:paddingLeft="10dp"
-                        android:paddingTop="15dp"
+                        android:paddingTop="12dp"
                         android:text="2km (18 phút) Giao ngay"
-                        android:textSize="20dp" />
+                        android:textSize="18dp" />
 
 
 
@@ -187,9 +189,9 @@
                         android:layout_height="50dp"
                         android:layout_marginLeft="10dp"
                         android:paddingLeft="10dp"
-                        android:paddingTop="15dp"
+                        android:paddingTop="12dp"
                         android:text="Deal 0Đ"
-                        android:textSize="20dp" />
+                        android:textSize="18dp" />
 
                 </LinearLayout>
                 <View
@@ -201,11 +203,21 @@
                     android:background="#C5C3C3" />
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/title_menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="10dp"
+                android:text="Dành cho bạn"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewProducts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="45dp"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
