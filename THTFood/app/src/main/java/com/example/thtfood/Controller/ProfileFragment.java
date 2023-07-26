@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.widget.Toast;
@@ -214,66 +212,32 @@ public class ProfileFragment extends Fragment {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                     if (task.isSuccessful()) {
+                        // Hiển thị hình ảnh từ Firebase lên ImageView và áp dụng circleCropTransform() để làm hình ảnh trở thành hình tròn
+                        Glide.with(requireContext()).load(R.drawable.circle_bg).apply(RequestOptions.circleCropTransform()).into(avatar);
                         // Tải ảnh lên Storage thành công, lấy đường dẫn của ảnh
                         task.getResult().getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
                                 // Lấy đường dẫn của ảnh từ Storage
                                 String avatarPath = uri.toString();
-
                                 // Cập nhật đường dẫn ảnh vào nhà hàng và lưu lại vào Realtime Database
                                 DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference()
                                         .child("users")
                                         .child(uid);
                                 usersRef.child("avatar").setValue(avatarPath);
-                                Glide.with(requireContext()).load(avatarPath).into(avatar);
+                                    Toast.makeText(requireContext(), "Cập nhật ảnh thành công", Toast.LENGTH_SHORT).show();
+                                    // Update lại ImageView
+                                    Glide.with(requireContext())
+                                            .load(avatarPath)
+                                            .apply(RequestOptions.circleCropTransform())
+                                            .into(avatar);
                             }
                         });
                     }
                 }
             });
-
-            // Upload ảnh lên Firebase Storage
-//            storageReference.putFile(imageUri)
-//                    .addOnSuccessListener(taskSnapshot -> {
-//                        // Nếu upload thành công, lấy đường dẫn của ảnh từ Storage
-//                        storageReference.getDownloadUrl()
-//                                .addOnSuccessListener(uri -> {
-//                                    // Lấy đường dẫn của ảnh từ Storage
-//                                    String avatarPath = uri.toString();
-//
-//                                    // Lưu đường dẫn vào Realtime Database
-//                                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference()
-//                                            .child("users")
-//                                            .child(uid);
-//                                    userRef.child("avatar_path").setValue(avatarPath)
-//                                            .addOnSuccessListener(aVoid -> {
-//                                                // Cập nhật ảnh thành công
-//                                                // Tùy chỉnh thông báo hoặc cập nhật giao diện tại đây (nếu cần)
-//                                                Toast.makeText(requireContext(), "Cập nhật ảnh thành công", Toast.LENGTH_SHORT).show();
-//                                                // Update lại ImageView với ảnh mới (nếu cần)
-//                                                Glide.with(requireContext()).load(avatarPath).into(avatar);
-//                                            })
-//                                            .addOnFailureListener(e -> {
-//                                                // Cập nhật ảnh không thành công
-//                                                Toast.makeText(requireContext(), "Cập nhật ảnh không thành công", Toast.LENGTH_SHORT).show();
-//                                            });
-//                                })
-//                                .addOnFailureListener(e -> {
-//                                    // Lỗi khi lấy đường dẫn ảnh từ Storage
-//                                    Toast.makeText(requireContext(), "Lỗi khi lấy đường dẫn ảnh từ Storage", Toast.LENGTH_SHORT).show();
-//                                });
-//                    })
-//                    .addOnFailureListener(e -> {
-//                        // Upload ảnh không thành công
-//                        Toast.makeText(requireContext(), "Upload ảnh không thành công", Toast.LENGTH_SHORT).show();
-//                    });
         }
-        // Sử dụng imageUri để upload ảnh lên Firebase Storage và lấy đường dẫn avatarPath của ảnh đã upload
-        // Sau đó, lưu avatarPath vào Realtime Database cho người dùng tương ứng.
     }
-
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
