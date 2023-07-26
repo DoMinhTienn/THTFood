@@ -16,12 +16,21 @@ import java.util.List;
 // ProductAdapter.java
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
-    private List<Product> productList;
+    private  List<Product> productList;
+    private OnProductClickListener onProductClickListener;
 
     public ProductAdapter(List<Product> productList) {
         this.productList = productList;
     }
 
+
+    public interface OnProductClickListener {
+        void onProductClick(Product product);
+    }
+
+    public void setOnProductClickListener(OnProductClickListener listener) {
+        this.onProductClickListener = listener;
+    }
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,7 +51,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         return productList.size();
     }
 
-    public static class ProductViewHolder extends RecyclerView.ViewHolder {
+    public class ProductViewHolder extends RecyclerView.ViewHolder {
         ImageView imageViewProduct;
         TextView textViewProductName;
         TextView textViewProductPrice;
@@ -52,6 +61,18 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             imageViewProduct = itemView.findViewById(R.id.image_view);
             textViewProductName = itemView.findViewById(R.id.title_text_view);
             textViewProductPrice = itemView.findViewById(R.id.subtitle_text_view);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION && onProductClickListener != null) {
+                        Product product = productList.get(position);
+                        onProductClickListener.onProductClick(product);
+                    }
+                }
+            });
+
         }
     }
 }

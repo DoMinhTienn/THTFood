@@ -3,37 +3,36 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#F7FAF7"
-    android:onClick="openResActivity"
     android:padding="16dp">
 
     <ImageView
-        android:id="@+id/foodImageView"
+        android:id="@+id/image_view2"
         android:layout_width="100dp"
         android:layout_height="120dp"
         android:scaleType="centerCrop"
         android:src="@drawable/bread" />
 
     <TextView
-        android:id="@+id/foodNameTextView"
+        android:id="@+id/title_text_view2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_toRightOf="@id/foodImageView"
+        android:layout_toRightOf="@id/image_view2"
         android:text="Quán ăn Nam Bộ"
         android:textSize="20sp"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/foodAddressTextView"
+        android:id="@+id/subtitle_text_view2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/foodNameTextView"
+        android:layout_below="@id/title_text_view2"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:layout_toRightOf="@id/foodImageView"
+        android:layout_toRightOf="@id/image_view2"
         android:text="Phường 5, Gò Vấp"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -41,7 +40,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/foodImageView"
+        android:layout_below="@id/image_view2"
         android:layout_marginTop="5dp"
         android:background="#C5C3C3" />
 

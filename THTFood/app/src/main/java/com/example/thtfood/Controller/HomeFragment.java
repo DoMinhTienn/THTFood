@@ -1,5 +1,6 @@
 package com.example.thtfood.Controller;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -108,9 +109,9 @@ public class HomeFragment extends Fragment {
                     TextView titleTextView = cardView.findViewById(R.id.title_text_view);
                     TextView subtitleTextView = cardView.findViewById(R.id.subtitle_text_view);
 
-                    ImageView imageView2 = cardView2.findViewById(R.id.foodImageView);
-                    TextView titleTextView2 = cardView2.findViewById(R.id.foodNameTextView);
-                    TextView subtitleTextView2 = cardView2.findViewById(R.id.foodAddressTextView);
+                    ImageView imageView2 = cardView2.findViewById(R.id.image_view2);
+                    TextView titleTextView2 = cardView2.findViewById(R.id.title_text_view2);
+                    TextView subtitleTextView2 = cardView2.findViewById(R.id.subtitle_text_view2);
 
 
                     Glide.with(getActivity()).load(restaurantImageURL).into(imageView);
@@ -120,10 +121,32 @@ public class HomeFragment extends Fragment {
                     Glide.with(getActivity()).load(restaurantImageURL).into(imageView2);
                     titleTextView2.setText(restaurantName);
                     subtitleTextView2.setText(address);
-
+                    cardView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // Tạo Intent và truyền dữ liệu của nhà hàng qua Intent
+                            Intent intent = new Intent(getActivity(), RestaurantActivity.class);
+                            intent.putExtra("name", restaurantName);
+                            intent.putExtra("address", address);
+                            intent.putExtra("avatar", restaurantImageURL);
+                            startActivity(intent);
+                        }
+                    });
+                    cardView2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // Tạo Intent và truyền dữ liệu của nhà hàng qua Intent
+                            Intent intent = new Intent(getActivity(), RestaurantActivity.class);
+                            intent.putExtra("name", restaurantName);
+                            intent.putExtra("address", address);
+                            intent.putExtra("avatar", restaurantImageURL);
+                            startActivity(intent);
+                        }
+                    });
                     // Thêm cardView vào horizontalLayout
                     horizontalLayout.addView(cardView);
                     verticalLayout.addView(cardView2);
+
 
                 }
             }
