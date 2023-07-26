@@ -34,7 +34,7 @@
 
                         <FrameLayout
                             android:layout_width="80dp"
-                            android:layout_height="81dp"
+                            android:layout_height="80dp"
                             tools:ignore="MissingConstraints">
 
                             <ImageView
@@ -42,10 +42,10 @@
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
                                 android:scaleType="centerCrop"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                tools:ignore="MissingConstraints"
-                                tools:layout_editor_absoluteX="0dp"
-                                tools:src="@tools:sample/avatars" />
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                android:src="@drawable/circle_bg" />
 
                             <ImageButton
                                 android:id="@+id/choose_image_button"
