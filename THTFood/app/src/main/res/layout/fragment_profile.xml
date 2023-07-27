@@ -44,8 +44,7 @@
                                 android:scaleType="centerCrop"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                android:src="@drawable/circle_bg" />
+                                app:layout_constraintTop_toTopOf="parent" />
 
                             <ImageButton
                                 android:id="@+id/choose_image_button"
@@ -56,30 +55,33 @@
                                 android:src="@drawable/baseline_edit_24" />
 
                         </FrameLayout>
-                        <TextView
-                            android:id="@+id/textView6"
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/UserNameEditText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="96dp"
                             android:layout_marginTop="16dp"
                             android:text="Tên USER"
+                            android:enabled="false"
                             android:textSize="20sp"
                             android:textStyle="bold"
+                            android:imeOptions="actionDone"
+                            android:singleLine="true"
+                            android:backgroundTint="@android:color/transparent"
+                            style="@style/MyTextInputEditTextStyle"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
-<!--                        <ImageButton-->
-<!--                            android:id="@+id/choose_image_button"-->
-<!--                            android:layout_width="38dp"-->
-<!--                            android:layout_height="31dp"-->
-<!--                            android:layout_marginTop="16dp"-->
-<!--                            android:layout_marginEnd="168dp"-->
-<!--                            android:background="@android:color/transparent"-->
-<!--                            app:layout_constraintEnd_toEndOf="parent"-->
-<!--                            app:layout_constraintTop_toTopOf="parent"-->
-<!--                            app:srcCompat="@drawable/baseline_edit_24"-->
-<!--                            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />-->
-
+                        <ImageButton
+                            android:id="@+id/edit_name_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="28dp"
+                            android:background="@android:color/transparent"
+                            android:src="@drawable/baseline_edit_24"
+                            app:layout_constraintStart_toEndOf="@+id/UserNameEditText"
+                            app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </FrameLayout>
 

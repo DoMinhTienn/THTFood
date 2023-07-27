@@ -5,4 +5,6 @@
     <color name="red">#BC0505</color>
     <color name="red_opacity">#EF6060</color>
     <color name="gray">#C2BEBE</color>
+    <color name="my_text_input_edit_text_color_enabled">#FF0000</color>
+    <color name="my_text_input_edit_text_color_disabled">#000000</color>
 </resources>
