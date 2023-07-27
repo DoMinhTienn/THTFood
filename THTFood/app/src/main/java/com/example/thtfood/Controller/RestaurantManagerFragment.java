@@ -1,5 +1,6 @@
 package com.example.thtfood.Controller;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +33,8 @@ public class RestaurantManagerFragment extends Fragment {
 
     User user = UserManager.getInstance().getUser();
     DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants");
+
+    ImageButton imageButtonMenu;
 
     private ImageView restaurantAvatar;
     private TextView restaurantName;
@@ -81,6 +85,15 @@ public class RestaurantManagerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_restaurant_manager, container, false);
         restaurantAvatar = view.findViewById(R.id.imageViewRestaurant);
         restaurantName = view.findViewById(R.id.textViewRestaurantName);
+        imageButtonMenu = view.findViewById(R.id.imageButtonMenu);
+
+        imageButtonMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), MenuRestaurantActivity.class));
+
+            }
+        });
 
         restaurantsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
