@@ -38,6 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.widget.Toast;
@@ -141,34 +142,75 @@ public class ProfileFragment extends Fragment {
                 mAuth.signOut();
                 startActivity(new Intent(getContext(), MainActivity.class));
 
-        //btn logout
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder alertDialog;
-                alertDialog = new AlertDialog.Builder(getContext());
-                alertDialog.setMessage(getString(R.string.LogoutDialog));
-                alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                //btn logout
+                logout.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        mAuth.signOut();
-                        startActivity(new Intent(getContext(), MainActivity.class));
+                    public void onClick(View v) {
+                        AlertDialog.Builder alertDialog;
+                        alertDialog = new AlertDialog.Builder(getContext());
+                        alertDialog.setMessage(getString(R.string.LogoutDialog));
+                        alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                mAuth.signOut();
+                                startActivity(new Intent(getContext(), MainActivity.class));
+                            }
+                        });
+                        alertDialog.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        AlertDialog alert = alertDialog.create();
+                        alert.show();
                     }
                 });
-                alertDialog.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                AlertDialog alert=alertDialog.create();
-                alert.show();
+
             }
         });
         return view;
     }
 
-//update avt
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        handleDisplay();
+    }
+
+    private void handleDisplay() {
+        View v = getView();
+        Button button4 = v.findViewById(R.id.button4);
+        Button button5 = v.findViewById(R.id.button5);
+        Button button6 = v.findViewById(R.id.button6);
+        Button button7 = v.findViewById(R.id.button7);
+        Button buttonQuite = v.findViewById(R.id.buttonQuite);
+        if (user != null && "1".equals(user.getRole())) {
+            {
+                RestaurantHelper.checkRestaurant(isRestaurant -> {
+                    if (isRestaurant) {
+                        // Đã là nhà hàng
+                    } else {
+                        button5.setVisibility(View.GONE);
+                        button6.setVisibility(View.GONE);
+                        button7.setVisibility(View.GONE);
+                        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) buttonQuite.getLayoutParams();
+                        layoutParams.topToBottom = R.id.button4; // Đặt buttonQuite nằm dưới button4
+                        buttonQuite.setLayoutParams(layoutParams);
+                        button4.setText("Tạo nhà hàng");
+                        button4.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(getActivity(), CreateRestaurantAcittivity.class));
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    }
+
     private void openImagePicker() {
         // Mở hộp thoại để chọn hình ảnh từ thư viện
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -186,6 +228,7 @@ public class ProfileFragment extends Fragment {
             }
         }
     }
+
     private void updateProfileImage(Uri imageUri) {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
@@ -225,57 +268,17 @@ public class ProfileFragment extends Fragment {
                                         .child("users")
                                         .child(uid);
                                 usersRef.child("avatar").setValue(avatarPath);
-                                    Toast.makeText(requireContext(), "Cập nhật ảnh thành công", Toast.LENGTH_SHORT).show();
-                                    // Update lại ImageView
-                                    Glide.with(requireContext())
-                                            .load(avatarPath)
-                                            .apply(RequestOptions.circleCropTransform())
-                                            .into(avatar);
+                                Toast.makeText(requireContext(), "Cập nhật ảnh thành công", Toast.LENGTH_SHORT).show();
+                                // Update lại ImageView
+                                Glide.with(requireContext())
+                                        .load(avatarPath)
+                                        .apply(RequestOptions.circleCropTransform())
+                                        .into(avatar);
                             }
                         });
                     }
                 }
             });
-        }
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        handleDisplay();
-    }
-
-    private void handleDisplay() {
-        View v = getView();
-        Button button4 = v.findViewById(R.id.button4);
-        Button button5 = v.findViewById(R.id.button5);
-        Button button6 = v.findViewById(R.id.button6);
-        Button button7 = v.findViewById(R.id.button7);
-        Button buttonQuite = v.findViewById(R.id.buttonQuite);
-        if (user != null && "1".equals(user.getRole())) {
-            {
-                RestaurantHelper.checkRestaurant(isRestaurant -> {
-                    // Xử lý kết quả trả về tùy thuộc vào giá trị của isRestaurant
-                    if (isRestaurant) {
-                        // Đã là nhà hàng
-                    } else {
-                        button5.setVisibility(View.GONE);
-                        button6.setVisibility(View.GONE);
-                        button7.setVisibility(View.GONE);
-                        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) buttonQuite.getLayoutParams();
-                        layoutParams.topToBottom = R.id.button4; // Đặt buttonQuite nằm dưới button4
-                        buttonQuite.setLayoutParams(layoutParams);
-                        button4.setText("Tạo nhà hàng");
-                        button4.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                startActivity(new Intent(getActivity(), CreateRestaurantAcittivity.class));
-                            }
-                        });
-                    }
-                });
-            }
         }
     }
 }
