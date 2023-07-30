@@ -3,15 +3,21 @@ package com.example.thtfood.Model;
 public class Menu {
     private String name;
     private String image;
+    private String description;
+    private double price;
 
-    public Menu(String name, String image, double price, boolean active) {
+    public Menu() {
+    }
+
+    private boolean active;
+
+    public Menu(String name, String image, double price, String description,  boolean active) {
         this.name = name;
         this.image = image;
         this.price = price;
         this.active = active;
+        this.description = description;
     }
-
-    private double price;
 
     public String getName() {
         return name;
@@ -45,5 +51,11 @@ public class Menu {
         this.active = active;
     }
 
-    private boolean active;
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
 }
