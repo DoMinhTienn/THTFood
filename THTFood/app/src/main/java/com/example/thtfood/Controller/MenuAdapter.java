@@ -10,6 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.thtfood.Model.Menu;
 import com.example.thtfood.R;
 
@@ -54,7 +57,11 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         public void bind(Menu menuItem) {
             menuItem.getName();
             // Đổ dữ liệu từ MenuItem vào các thành phần trong itemView
-            imageViewMenu.setImageResource(R.drawable.retaurant_shape); // Thay thế bằng ảnh từ MenuItem (nếu có)
+            Glide.with(itemView.getContext())
+                    .load(menuItem.getImage()) // Chuyển đường dẫn ảnh từ MenuItem vào đây
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))) // Tuỳ chỉnh góc bo tròn nếu cần
+                    .into(imageViewMenu);
+            // Thay thế bằng ảnh từ MenuItem (nếu có)
             textViewMenu.setText(menuItem.getName());
             textViewPrice.setText(String.valueOf(menuItem.getPrice()));
             // Thiết lập các sự kiện onClick cho imageButton (nếu có)

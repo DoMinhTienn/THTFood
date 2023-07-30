@@ -186,7 +186,7 @@ public class CreateRestaurantAcittivity extends AppCompatActivity {
         adapterWard.addAll(filteredWards);
     }
 
-    public void onChooseImageClick(View view) {
+    private void onChooseImageClick(View view) {
         // Mở hộp thoại để chọn hình ảnh từ thư viện
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
