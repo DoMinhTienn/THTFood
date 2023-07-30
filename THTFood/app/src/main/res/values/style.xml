@@ -4,4 +4,8 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">5dp</item>
     </style>
+    <style name="MyTextInputEditTextStyle">
+        <!-- Áp dụng màu chữ từ selector -->
+        <item name="android:textColor">@drawable/text_input_edit_text_selector</item>
+    </style>
 </resources>

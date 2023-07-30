@@ -13,9 +13,11 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -30,10 +32,14 @@ import com.example.thtfood.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -48,13 +54,16 @@ import android.widget.Toast;
  */
 public class ProfileFragment extends Fragment {
     FirebaseAuth mAuth;
-    private boolean isRestaurant = false;
-
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     public static final int REQUEST_IMAGE_GET = 1;
-    TextView tv1;
+    String uid = currentUser.getUid();
     Button logout;
-    ImageButton chooseImageButton;
+    ImageButton chooseImageButton, editNameButton;
+    TextInputEditText textInputEditText;
     private ImageView avatar;
+
+    User user = UserManager.getInstance().getUser();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -105,7 +114,8 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         logout = view.findViewById(R.id.buttonQuite);
-        tv1 = view.findViewById(R.id.textView6);
+        textInputEditText = view.findViewById(R.id.UserNameEditText);
+        editNameButton = view.findViewById(R.id.edit_name_button);
         avatar = view.findViewById(R.id.profile_image);
         chooseImageButton = view.findViewById(R.id.choose_image_button);
 
@@ -116,7 +126,6 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        User user = UserManager.getInstance().getUser();
         if (user != null) {
             String userName = user.getName();
             String role = user.getRole();
@@ -128,11 +137,43 @@ public class ProfileFragment extends Fragment {
                     .skipMemoryCache(true)  // Thêm dòng này để vô hiệu hóa cache
                     .diskCacheStrategy(DiskCacheStrategy.NONE);  // Vô hiệu hóa cache trên ổ đĩa
 
-            Glide.with(this).load(userAvatarPath).into(avatar);
-
-            tv1.setText(userName);
+            Glide.with(requireContext())
+                    .load(userAvatarPath)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(avatar);
+            textInputEditText.setText(userName);
         }
+        //btn editNameButton
+        editNameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textInputEditText.setEnabled(true);
+                textInputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+                            // Lấy tên mới từ TextInputEditText
+                            String newName = textInputEditText.getText().toString().trim();
 
+                            if (!newName.isEmpty()) {
+                                DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference()
+                                        .child("users")
+                                        .child(uid);
+                                usersRef.child("name").setValue(newName);
+
+                                textInputEditText.setEnabled(false);
+                                user.setName(newName);
+                                Toast.makeText(requireContext(), "Cập nhật tên thành công", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(requireContext(), "Vui lòng nhập tên mới", Toast.LENGTH_SHORT).show();
+                            }
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+            }
+        });
         //btn logout
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,10 +208,10 @@ public class ProfileFragment extends Fragment {
         intent.setType("image/*");
         startActivityForResult(intent, REQUEST_IMAGE_GET);
     }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_GET && resultCode == Activity.RESULT_OK) {
             if (data != null && data.getData() != null) {
                 Uri selectedImageUri = data.getData();
@@ -178,10 +219,7 @@ public class ProfileFragment extends Fragment {
             }
         }
     }
-    private void updateProfileImage(Uri imageUri) {
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        String uid = currentUser.getUid();
+    public void updateProfileImage(Uri imageUri) {
         // TODO: Thêm mã để cập nhật ảnh lên Firebase Storage và lưu đường dẫn vào Realtime Database
         if (imageUri != null) {
             // Trích xuất đuôi file từ Uri của ảnh
@@ -212,7 +250,7 @@ public class ProfileFragment extends Fragment {
                             public void onSuccess(Uri uri) {
                                 // Lấy đường dẫn của ảnh từ Storage
                                 String avatarPath = uri.toString();
-                                // Cập nhật đường dẫn ảnh vào nhà hàng và lưu lại vào Realtime Database
+                                // Cập nhật đường dẫn ảnh vào user và lưu lại vào Realtime Database
                                 DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference()
                                         .child("users")
                                         .child(uid);
@@ -223,6 +261,7 @@ public class ProfileFragment extends Fragment {
                                         .load(avatarPath)
                                         .apply(RequestOptions.circleCropTransform())
                                         .into(avatar);
+                                user.setAvatar_path(avatarPath);
                             }
                         });
                     }
@@ -230,7 +269,6 @@ public class ProfileFragment extends Fragment {
             });
         }
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
