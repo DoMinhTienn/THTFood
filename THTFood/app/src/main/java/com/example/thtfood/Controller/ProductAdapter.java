@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.thtfood.Model.Product;
 import com.example.thtfood.R;
 
@@ -16,7 +17,7 @@ import java.util.List;
 // ProductAdapter.java
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
-    private  List<Product> productList;
+    private  List<Product> productList ;
     private OnProductClickListener onProductClickListener;
 
     public ProductAdapter(List<Product> productList) {
@@ -43,7 +44,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         Product product = productList.get(position);
         holder.textViewProductName.setText(product.getName());
         holder.textViewProductPrice.setText(String.valueOf(product.getPrice()));
-        // Cài đặt hình ảnh sản phẩm vào ImageView nếu có
+        Glide.with(holder.imageViewProduct.getContext())
+                .load(product.getImage())
+                .into(holder.imageViewProduct);
     }
 
     @Override
