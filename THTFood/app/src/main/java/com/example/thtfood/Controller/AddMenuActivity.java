@@ -9,12 +9,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -26,7 +22,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.thtfood.Model.Menu;
+import com.example.thtfood.Model.Product;
 import com.example.thtfood.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -120,7 +116,7 @@ public class AddMenuActivity extends AppCompatActivity {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         String restaurantId = currentUser.getUid();
-        Menu menu = new Menu(name, "", price, description, true);
+        Product product = new Product(name, "", price, description, true);
 
         DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants").child(restaurantId);
         DatabaseReference menuRef = restaurantsRef.child("menu");
@@ -129,7 +125,7 @@ public class AddMenuActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int menuCount = (int) snapshot.getChildrenCount();
                 String newMenuId = "mon_" + (menuCount + 1);
-                menuRef.child(newMenuId).setValue(menu).addOnCompleteListener(new OnCompleteListener<Void>() {
+                menuRef.child(newMenuId).setValue(product).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         uploadImageToStorage(restaurantId, name, newMenuId);

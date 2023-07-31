@@ -5,18 +5,24 @@ public class Product {
     private String image;
     private String description;
     private double price;
-
+    private boolean active;
     public Product() {
     }
 
-
-    public Product(String name, String image, double price, String description) {
+    public Product(String name, String image, double price, String description, boolean active) {
         this.name = name;
         this.image = image;
         this.price = price;
         this.description = description;
+        this.active = active;
+    }
+    public boolean isActive() {
+        return active;
     }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
     public String getName() {
         return name;
     }

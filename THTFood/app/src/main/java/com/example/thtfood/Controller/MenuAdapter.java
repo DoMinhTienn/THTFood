@@ -13,16 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.thtfood.Model.Menu;
+import com.example.thtfood.Model.Product;
 import com.example.thtfood.R;
 
 import java.util.List;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder> {
-    private List<Menu> menuItems;
+    private List<Product> products;
 
-    public MenuAdapter(List<Menu> menuItems) {
-        this.menuItems = menuItems;
+    public MenuAdapter(List<Product> products) {
+        this.products = products;
     }
     @NonNull
     @Override
@@ -33,13 +33,13 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MenuAdapter.MenuViewHolder holder, int position) {
-        Menu menuItem = menuItems.get(position);
-        holder.bind(menuItem);
+        Product product = products.get(position);
+        holder.bind(product);
     }
 
     @Override
     public int getItemCount() {
-        return menuItems.size();
+        return products.size();
     }
 
     public static class MenuViewHolder extends RecyclerView.ViewHolder{
@@ -54,16 +54,16 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
             textViewPrice = itemView.findViewById(R.id.textViewPrice);
             imageButton = itemView.findViewById(R.id.imageButton);
         }
-        public void bind(Menu menuItem) {
-            menuItem.getName();
+        public void bind(Product productItem) {
+            productItem.getName();
             // Đổ dữ liệu từ MenuItem vào các thành phần trong itemView
             Glide.with(itemView.getContext())
-                    .load(menuItem.getImage()) // Chuyển đường dẫn ảnh từ MenuItem vào đây
+                    .load(productItem.getImage()) // Chuyển đường dẫn ảnh từ MenuItem vào đây
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))) // Tuỳ chỉnh góc bo tròn nếu cần
                     .into(imageViewMenu);
             // Thay thế bằng ảnh từ MenuItem (nếu có)
-            textViewMenu.setText(menuItem.getName());
-            textViewPrice.setText(String.valueOf(menuItem.getPrice()));
+            textViewMenu.setText(productItem.getName());
+            textViewPrice.setText(String.valueOf(productItem.getPrice()));
             // Thiết lập các sự kiện onClick cho imageButton (nếu có)
         }
     }

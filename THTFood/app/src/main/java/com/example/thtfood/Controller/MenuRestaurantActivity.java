@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.thtfood.Model.Menu;
+import com.example.thtfood.Model.Product;
 import com.example.thtfood.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,7 +29,7 @@ import java.util.List;
 
 public class MenuRestaurantActivity extends AppCompatActivity {
     private static final int REQUEST_ADD_MENU = 1;
-    private List<Menu> menuItems = new ArrayList<>();
+    private List<Product> products = new ArrayList<>();
     private RecyclerView recyclerView;
     private MenuAdapter menuAdapter;
     private Button btnConfirm;
@@ -41,7 +41,7 @@ public class MenuRestaurantActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu_restaurant);
         recyclerView = findViewById(R.id.recyclerViewMenu);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        menuAdapter = new MenuAdapter(menuItems);
+        menuAdapter = new MenuAdapter(products);
         recyclerView.setAdapter(menuAdapter);
         btnConfirm = findViewById(R.id.btnConfirm);
         tvNoData = findViewById(R.id.tvNoData);
@@ -62,7 +62,7 @@ public class MenuRestaurantActivity extends AppCompatActivity {
                 .child("restaurants")
                 .child(restaurantId)
                 .child("menu");
-        menuItems.clear();
+        products.clear();
         menuRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -72,8 +72,8 @@ public class MenuRestaurantActivity extends AppCompatActivity {
                     menuRef.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                            Menu menu = snapshot.getValue(Menu.class);
-                            menuItems.add(menu);
+                            Product product = snapshot.getValue(Product.class);
+                            products.add(product);
                             menuAdapter.notifyDataSetChanged();
                         }
 
@@ -99,7 +99,7 @@ public class MenuRestaurantActivity extends AppCompatActivity {
                     });
                 }
                 else{
-                    if (menuItems.size() == 0) {
+                    if (products.size() == 0) {
                         recyclerView.setVisibility(View.GONE);
                         tvNoData.setVisibility(View.VISIBLE);
                     } else{

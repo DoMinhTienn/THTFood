@@ -81,7 +81,7 @@ public class RestaurantActivity extends AppCompatActivity {
                             String descriptionmenu = childSnapshot.child("description").getValue(String.class);
                             String imagemenu = childSnapshot.child("image").getValue(String.class);
                             Double price = childSnapshot.child("price").getValue(Double.class);
-                            Product product = new Product(namemenu, imagemenu, price,descriptionmenu);
+                            Product product = new Product(namemenu, imagemenu, price,descriptionmenu, true);
                             productList.add(product);
                         }
                     }
