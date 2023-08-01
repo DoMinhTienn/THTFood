@@ -1,17 +1,30 @@
 package com.example.thtfood.Controller;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.thtfood.Model.CartItem;
 
 import com.example.thtfood.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProductDetailActivity extends AppCompatActivity {
     private int quantity = 1;
+    private String productName;
+    private  double productPrice;
+    private CartViewModel cartViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,14 +32,15 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
+        cartViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance(getApplication())).get(CartViewModel.class);
 
         TextView textViewProductName = findViewById(R.id.productName);
         TextView textViewProductPrice = findViewById(R.id.productPrice);
 
         Intent intent = getIntent();
         if (intent != null) {
-            String productName = intent.getStringExtra("product_name");
-            double productPrice = intent.getDoubleExtra("product_price", 0);
+            productName = intent.getStringExtra("product_name");
+            productPrice = intent.getDoubleExtra("product_price", 0);
 
             textViewProductName.setText(productName);
             textViewProductPrice.setText(String.valueOf(productPrice));
@@ -58,8 +72,11 @@ public class ProductDetailActivity extends AppCompatActivity {
         addToCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Thêm mã xử lý thêm món ăn vào giỏ hàng tại đây
-                // Ví dụ: gửi yêu cầu đến máy chủ hoặc lưu thông tin vào cơ sở dữ liệu
+                CartItem cartItem = new CartItem(productName, quantity, productPrice);
+                cartViewModel.addToCart(cartItem);
+                cartViewModel.saveCartItemsToSharedPreferences(ProductDetailActivity.this);
+                // Quan sát sự thay đổi trong LiveData và log danh sách sản phẩm khi có sự thay đổi
+                Toast.makeText(ProductDetailActivity.this, "them thanh cong", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -129,6 +128,7 @@ public class ProfileFragment extends Fragment {
 
         if (user != null) {
             String userName = user.getName();
+            String role = user.getRole();
             String userAvatarPath = user.getAvatar_path();
 
             RequestOptions options = new RequestOptions()

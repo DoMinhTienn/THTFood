@@ -1,5 +1,6 @@
 package com.example.thtfood.Controller;
 
+import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -19,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DataSnapshot;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +86,7 @@ public class HomeFragment extends Fragment {
         LinearLayout horizontalLayout = view.findViewById(R.id.horizontal_layout);
         LinearLayout verticalLayout = view.findViewById(R.id.vertical_layout);
 
+
         restaurantsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -98,6 +101,7 @@ public class HomeFragment extends Fragment {
                     String district = addressSnapshot.child("district").getValue(String.class);
                     String ward = addressSnapshot.child("ward").getValue(String.class);
                     String address = ward + " " + district + " " + city;
+                    String restaurantKey = restaurantSnapshot.getKey();
 
                     boolean restaurantIsActive = restaurantSnapshot.child("active").getValue(Boolean.class);
 
@@ -129,6 +133,7 @@ public class HomeFragment extends Fragment {
                             intent.putExtra("name", restaurantName);
                             intent.putExtra("address", address);
                             intent.putExtra("avatar", restaurantImageURL);
+                            intent.putExtra("restaurantKey", restaurantKey);
                             startActivity(intent);
                         }
                     });
@@ -140,13 +145,13 @@ public class HomeFragment extends Fragment {
                             intent.putExtra("name", restaurantName);
                             intent.putExtra("address", address);
                             intent.putExtra("avatar", restaurantImageURL);
+                            intent.putExtra("restaurantKey", restaurantKey);
                             startActivity(intent);
                         }
                     });
                     // Thêm cardView vào horizontalLayout
                     horizontalLayout.addView(cardView);
                     verticalLayout.addView(cardView2);
-
 
                 }
             }
