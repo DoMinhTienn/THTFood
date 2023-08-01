@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.thtfood.Model.Product;
@@ -33,6 +34,7 @@ public class MenuRestaurantActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MenuAdapter menuAdapter;
     private Button btnConfirm;
+    private ImageButton imageButtonQuit;
     private  TextView tvNoData;
     @SuppressLint("MissingInflatedId")
     @Override
@@ -45,6 +47,7 @@ public class MenuRestaurantActivity extends AppCompatActivity {
         recyclerView.setAdapter(menuAdapter);
         btnConfirm = findViewById(R.id.btnConfirm);
         tvNoData = findViewById(R.id.tvNoData);
+        imageButtonQuit = findViewById(R.id.imageButtonQuit);
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,6 +55,12 @@ public class MenuRestaurantActivity extends AppCompatActivity {
             }
         });
         loadData();
+        imageButtonQuit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void loadData(){

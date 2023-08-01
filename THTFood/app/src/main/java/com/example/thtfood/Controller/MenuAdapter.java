@@ -45,14 +45,15 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     public static class MenuViewHolder extends RecyclerView.ViewHolder{
         private ImageView imageViewMenu;
         private TextView textViewMenu, textViewPrice;
-        private ImageButton imageButton;
+        private ImageButton imageButtonDeleteFood, imageButtonEditFood;
 
         public MenuViewHolder(@NonNull View itemView) {
             super(itemView);
             imageViewMenu = itemView.findViewById(R.id.ImageViewMenu);
             textViewMenu = itemView.findViewById(R.id.textViewMemnu);
             textViewPrice = itemView.findViewById(R.id.textViewPrice);
-            imageButton = itemView.findViewById(R.id.imageButton);
+            imageButtonDeleteFood = itemView.findViewById(R.id.imageButtonDeleteFood);
+            imageButtonEditFood = itemView.findViewById(R.id.imageButtonEditFood);
         }
         public void bind(Product productItem) {
             productItem.getName();

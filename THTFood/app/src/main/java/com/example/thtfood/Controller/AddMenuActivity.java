@@ -44,7 +44,7 @@ public class AddMenuActivity extends AppCompatActivity {
 
     private ImageView menuAvatar;
     private TextView plusSign;
-    private ImageButton btnchooseImage;
+    private ImageButton btnchooseImage, imageButtonQuit;
     private Button btnConfirm;
     private Uri imageUri;
 
@@ -65,6 +65,7 @@ public class AddMenuActivity extends AppCompatActivity {
         eTprice = findViewById(R.id.editTextProductPrice);
         eTdescription = findViewById(R.id.editTextProductDiscription);
         btnConfirm = findViewById(R.id.btnConfirm);
+        imageButtonQuit = findViewById(R.id.imageButtonQuit);
 
         plusSign.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +89,12 @@ public class AddMenuActivity extends AppCompatActivity {
                 String description = eTdescription.getText().toString();
                 addMenu(name, price, description);
 
+            }
+        });
+        imageButtonQuit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
