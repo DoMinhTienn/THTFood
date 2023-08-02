@@ -2,7 +2,6 @@ package com.example.thtfood.Controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -50,7 +49,7 @@ public class RegisterActivity extends AppCompatActivity {
             imagebuttonquit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(RegisterActivity.this,MainActivity.class));
+                    finish();
                 }
             });
 
@@ -81,10 +80,10 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         public void afterTextChanged(Editable s) {
             if (s.length() > 0){
-                buttonLogin.setBackgroundResource(R.drawable.round_back_red_100);
+                buttonLogin.setBackgroundResource(R.drawable.round_back_red_10);
             }
             else{
-                buttonLogin.setBackgroundResource(R.drawable.round_back_brown_100);
+                buttonLogin.setBackgroundResource(R.drawable.round_back_brown_10);
             }
         }
     };

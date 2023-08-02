@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import com.example.thtfood.Model.User;
 import com.example.thtfood.Model.UserManager;
 import com.example.thtfood.R;
 import com.google.android.play.core.integrity.v;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,10 +34,13 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class RestaurantManagerFragment extends Fragment {
 
-    User user = UserManager.getInstance().getUser();
-    DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants");
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+    String restaurantId = currentUser.getUid();
+    DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants").child(restaurantId);
 
     ImageButton imageButtonMenu;
+
 
     private ImageView restaurantAvatar;
     private TextView restaurantName;
@@ -98,25 +104,21 @@ public class RestaurantManagerFragment extends Fragment {
         restaurantsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String Name = snapshot.child("name").getValue(String.class);
+                String ImageURL = snapshot.child("avatar_path").getValue(String.class);
+                boolean restaurantIsActive = snapshot.child("active").getValue(Boolean.class);
+                restaurantName.setText(Name);
+                Glide.with(getActivity()).load(ImageURL).into(restaurantAvatar);
 
-                for (DataSnapshot restaurantSnapshot : snapshot.getChildren()) {
-                    // Lấy thông tin của nhà hàng từ dataSnapshot
-                    String Name = restaurantSnapshot.child("name").getValue(String.class);
-                    String ImageURL = restaurantSnapshot.child("avatar_path").getValue(String.class);
-
-                    boolean restaurantIsActive = restaurantSnapshot.child("active").getValue(Boolean.class);
-
-                    Glide.with(getActivity()).load(ImageURL).into(restaurantAvatar);
-                    restaurantName.setText(Name);
-                }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
 
-
         return view;
     }
+
 }

@@ -69,10 +69,10 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void afterTextChanged(Editable s) {
             if (s.length() > 0){
-                btnLogin.setBackgroundResource(R.drawable.round_back_red_100);
+                btnLogin.setBackgroundResource(R.drawable.round_back_red_10);
             }
             else{
-                btnLogin.setBackgroundResource(R.drawable.round_back_brown_100);
+                btnLogin.setBackgroundResource(R.drawable.round_back_brown_10);
             }
         }
     };

@@ -69,9 +69,9 @@ public class InfoAccountActivity extends AppCompatActivity {
         boolean allFieldsValid = nameValid && emailValid && roleValid;
         btnconfirm.setEnabled(allFieldsValid);
         if (allFieldsValid) {
-            btnconfirm.setBackgroundResource(R.drawable.round_back_red_100);
+            btnconfirm.setBackgroundResource(R.drawable.round_back_red_10);
         } else {
-            btnconfirm.setBackgroundResource(R.drawable.round_back_brown_100);
+            btnconfirm.setBackgroundResource(R.drawable.round_back_brown_10);
         }
     }
 

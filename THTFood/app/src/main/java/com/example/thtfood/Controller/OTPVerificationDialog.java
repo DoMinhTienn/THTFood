@@ -3,7 +3,6 @@ package com.example.thtfood.Controller;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -22,12 +21,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.thtfood.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
 
 public class OTPVerificationDialog extends Dialog {
     private EditText otp1, otp2, otp3, otp4, otp5, otp6;
@@ -146,7 +139,7 @@ public class OTPVerificationDialog extends Dialog {
                         showKeyboard(otp6);
                         break;
                     default:
-                        btnverify.setBackgroundResource(R.drawable.round_back_red_100);
+                        btnverify.setBackgroundResource(R.drawable.round_back_red_10);
                 }
 
             };
@@ -204,7 +197,7 @@ public class OTPVerificationDialog extends Dialog {
                     showKeyboard(otp1);
                     break;
             }
-            btnverify.setBackgroundResource(R.drawable.round_back_brown_100);
+            btnverify.setBackgroundResource(R.drawable.round_back_brown_10);
             return true;
         } else{
             return super.onKeyUp(keyCode, event);

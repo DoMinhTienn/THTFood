@@ -130,8 +130,7 @@ public class AddMenuActivity extends AppCompatActivity {
         menuRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int menuCount = (int) snapshot.getChildrenCount();
-                String newMenuId = "mon_" + (menuCount + 1);
+                String newMenuId = menuRef.push().getKey();
                 menuRef.child(newMenuId).setValue(product).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

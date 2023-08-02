@@ -24,18 +24,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuRestaurantActivity extends AppCompatActivity {
+public class MenuRestaurantActivity extends AppCompatActivity implements MenuAdapter.OnMenuItemDeleteListener {
     private static final int REQUEST_ADD_MENU = 1;
     private List<Product> products = new ArrayList<>();
+    private List<String> productsKey = new ArrayList<>();
     private RecyclerView recyclerView;
     private MenuAdapter menuAdapter;
     private Button btnConfirm;
     private ImageButton imageButtonQuit;
     private  TextView tvNoData;
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+    String restaurantId = currentUser.getUid();
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +50,7 @@ public class MenuRestaurantActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewMenu);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         menuAdapter = new MenuAdapter(products);
+        menuAdapter.setOnMenuItemDeleteListener(this);
         recyclerView.setAdapter(menuAdapter);
         btnConfirm = findViewById(R.id.btnConfirm);
         tvNoData = findViewById(R.id.tvNoData);
@@ -62,11 +69,13 @@ public class MenuRestaurantActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public void onMenuItemDelete(int position){
+
+        showDeleteConfirmationDialog(position);
+    }
 
     private void loadData(){
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        String restaurantId = currentUser.getUid();
         DatabaseReference menuRef = FirebaseDatabase.getInstance().getReference()
                 .child("restaurants")
                 .child(restaurantId)
@@ -82,6 +91,8 @@ public class MenuRestaurantActivity extends AppCompatActivity {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                             Product product = snapshot.getValue(Product.class);
+                            String key = snapshot.getKey();
+                            productsKey.add(key);
                             products.add(product);
                             menuAdapter.notifyDataSetChanged();
                         }
@@ -108,13 +119,7 @@ public class MenuRestaurantActivity extends AppCompatActivity {
                     });
                 }
                 else{
-                    if (products.size() == 0) {
-                        recyclerView.setVisibility(View.GONE);
-                        tvNoData.setVisibility(View.VISIBLE);
-                    } else{
-                        recyclerView.setVisibility(View.VISIBLE);
-                        tvNoData.setVisibility(View.GONE);
-                    }
+                    handleNoData();
                 }
             }
             @Override
@@ -123,6 +128,16 @@ public class MenuRestaurantActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void handleNoData(){
+        if (products.size() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            tvNoData.setVisibility(View.VISIBLE);
+        } else{
+            recyclerView.setVisibility(View.VISIBLE);
+            tvNoData.setVisibility(View.GONE);
+        }
     }
     private void openAddMenuActivity() {
         Intent intent = new Intent(MenuRestaurantActivity.this, AddMenuActivity.class);
@@ -135,4 +150,36 @@ public class MenuRestaurantActivity extends AppCompatActivity {
             loadData();
         }
     }
+
+
+    private void showDeleteConfirmationDialog(int position) {
+        CustomDialog dialog = new CustomDialog(this);
+        dialog.setDialogMessage("Bạn có chắc chắn muốn xóa mục này?");
+        dialog.setCustomDialogListener(new CustomDialog.CustomDialogListener() {
+            @Override
+            public void onOkButtonClicked() {
+                if (position >= 0 && position < products.size()) {
+                    Product product = products.get(position);
+                    String productkey = productsKey.get(position);
+                    DatabaseReference menuRef = FirebaseDatabase.getInstance().getReference()
+                            .child("restaurants")
+                            .child(restaurantId)
+                            .child("menu")
+                            .child(productkey);
+                    String imageUrl = product.getImage();
+
+                    menuRef.removeValue();
+                    StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
+                    storageReference.delete();
+
+                    products.remove(position);
+                    productsKey.remove(position);
+                    handleNoData();
+                    menuAdapter.notifyItemRemoved(position);
+                }
+            }
+        });
+        dialog.show();
+    }
+
 }
