@@ -173,29 +173,62 @@ public class OTPVerificationDialog extends Dialog {
 
     @SuppressLint("ResourceAsColor")
     @Override
-    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
+    public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_DEL){
             switch (selectedOTPposition){
                 case 5:
-                    selectedOTPposition = 4;
-                    showKeyboard(otp5);
+                    if( otp6.getText().toString().isEmpty()){
+                        otp5.setText("");
+                        selectedOTPposition = 4;
+                        showKeyboard(otp5);
+
+                    } else {
+                        selectedOTPposition = 5;
+                        showKeyboard(otp6);
+                    }
                     break;
                 case 4:
-                    selectedOTPposition = 3;
-                    showKeyboard(otp4);
+                    if( otp5.getText().toString().isEmpty()){
+                        otp4.setText("");
+                        selectedOTPposition = 3;
+                        showKeyboard(otp4);
+
+                    } else {
+                        selectedOTPposition = 4;
+                        showKeyboard(otp5);
+                    }
                     break;
                 case 3:
-                    selectedOTPposition = 2;
-                    showKeyboard(otp3);
+                    if( otp4.getText().toString().isEmpty()){
+                        otp3.setText("");
+                        selectedOTPposition = 2;
+                        showKeyboard(otp3);
+                    } else {
+                        selectedOTPposition = 3;
+                        showKeyboard(otp4);
+                    }
                     break;
                 case 2:
-                    selectedOTPposition = 1;
-                    showKeyboard(otp2);
+                    if( otp3.getText().toString().isEmpty()){
+                        otp2.setText("");
+                        selectedOTPposition = 1;
+                        showKeyboard(otp2);
+                    } else {
+                        selectedOTPposition = 2;
+                        showKeyboard(otp3);
+                    }
                     break;
                 case 1:
-                    selectedOTPposition = 0;
-                    showKeyboard(otp1);
-                    break;
+                    if( otp2.getText().toString().isEmpty()){
+                        otp1.setText("");
+                        selectedOTPposition = 0;
+                        showKeyboard(otp1);
+
+                    } else {
+                        selectedOTPposition = 1;
+                        showKeyboard(otp2);
+                       }
+                        break;
             }
             btnverify.setBackgroundResource(R.drawable.round_back_brown_10);
             return true;

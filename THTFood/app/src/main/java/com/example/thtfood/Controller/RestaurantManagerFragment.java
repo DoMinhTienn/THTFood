@@ -1,6 +1,7 @@
 package com.example.thtfood.Controller;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,8 +11,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -38,12 +42,12 @@ public class RestaurantManagerFragment extends Fragment {
     FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     String restaurantId = currentUser.getUid();
     DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants").child(restaurantId);
-
     ImageButton imageButtonMenu;
-
-
     private ImageView restaurantAvatar;
     private TextView restaurantName;
+    Switch switchActiveRestaurant;
+
+    private TextView textViewStateAcitve;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -92,12 +96,20 @@ public class RestaurantManagerFragment extends Fragment {
         restaurantAvatar = view.findViewById(R.id.imageViewRestaurant);
         restaurantName = view.findViewById(R.id.textViewRestaurantName);
         imageButtonMenu = view.findViewById(R.id.imageButtonMenu);
+        switchActiveRestaurant  = view.findViewById(R.id.switchActiveRestaurant);
+        textViewStateAcitve = view.findViewById(R.id.textViewStateAcitve);
+        switchActiveRestaurant.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                restaurantsRef.child("active").setValue(isChecked);
+                handleActiveRestaurant(isChecked);
+            }
+        });
 
         imageButtonMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), MenuRestaurantActivity.class));
-
             }
         });
 
@@ -109,7 +121,8 @@ public class RestaurantManagerFragment extends Fragment {
                 boolean restaurantIsActive = snapshot.child("active").getValue(Boolean.class);
                 restaurantName.setText(Name);
                 Glide.with(getActivity()).load(ImageURL).into(restaurantAvatar);
-
+                handleActiveRestaurant(restaurantIsActive);
+                switchActiveRestaurant.setChecked(restaurantIsActive);
             }
 
             @Override
@@ -119,6 +132,17 @@ public class RestaurantManagerFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void handleActiveRestaurant(boolean active){
+        if(active){
+
+            textViewStateAcitve.setText("Đang hoạt động");
+            textViewStateAcitve.setTextColor(Color.parseColor("#34c759"));
+        } else{
+            textViewStateAcitve.setText("Ngưng hoạt động");
+            textViewStateAcitve.setTextColor(Color.parseColor("#FF1744"));
+        }
     }
 
 }
