@@ -3,7 +3,6 @@ package com.example.thtfood.Controller;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -22,12 +21,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.thtfood.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
 
 public class OTPVerificationDialog extends Dialog {
     private EditText otp1, otp2, otp3, otp4, otp5, otp6;
@@ -146,7 +139,7 @@ public class OTPVerificationDialog extends Dialog {
                         showKeyboard(otp6);
                         break;
                     default:
-                        btnverify.setBackgroundResource(R.drawable.round_back_red_100);
+                        btnverify.setBackgroundResource(R.drawable.round_back_red_10);
                 }
 
             };
@@ -180,31 +173,64 @@ public class OTPVerificationDialog extends Dialog {
 
     @SuppressLint("ResourceAsColor")
     @Override
-    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
+    public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_DEL){
             switch (selectedOTPposition){
                 case 5:
-                    selectedOTPposition = 4;
-                    showKeyboard(otp5);
+                    if( otp6.getText().toString().isEmpty()){
+                        otp5.setText("");
+                        selectedOTPposition = 4;
+                        showKeyboard(otp5);
+
+                    } else {
+                        selectedOTPposition = 5;
+                        showKeyboard(otp6);
+                    }
                     break;
                 case 4:
-                    selectedOTPposition = 3;
-                    showKeyboard(otp4);
+                    if( otp5.getText().toString().isEmpty()){
+                        otp4.setText("");
+                        selectedOTPposition = 3;
+                        showKeyboard(otp4);
+
+                    } else {
+                        selectedOTPposition = 4;
+                        showKeyboard(otp5);
+                    }
                     break;
                 case 3:
-                    selectedOTPposition = 2;
-                    showKeyboard(otp3);
+                    if( otp4.getText().toString().isEmpty()){
+                        otp3.setText("");
+                        selectedOTPposition = 2;
+                        showKeyboard(otp3);
+                    } else {
+                        selectedOTPposition = 3;
+                        showKeyboard(otp4);
+                    }
                     break;
                 case 2:
-                    selectedOTPposition = 1;
-                    showKeyboard(otp2);
+                    if( otp3.getText().toString().isEmpty()){
+                        otp2.setText("");
+                        selectedOTPposition = 1;
+                        showKeyboard(otp2);
+                    } else {
+                        selectedOTPposition = 2;
+                        showKeyboard(otp3);
+                    }
                     break;
                 case 1:
-                    selectedOTPposition = 0;
-                    showKeyboard(otp1);
-                    break;
+                    if( otp2.getText().toString().isEmpty()){
+                        otp1.setText("");
+                        selectedOTPposition = 0;
+                        showKeyboard(otp1);
+
+                    } else {
+                        selectedOTPposition = 1;
+                        showKeyboard(otp2);
+                       }
+                        break;
             }
-            btnverify.setBackgroundResource(R.drawable.round_back_brown_100);
+            btnverify.setBackgroundResource(R.drawable.round_back_brown_10);
             return true;
         } else{
             return super.onKeyUp(keyCode, event);

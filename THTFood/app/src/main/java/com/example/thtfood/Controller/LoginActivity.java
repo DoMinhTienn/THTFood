@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         imagebuttonquit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
             }
         });
         edittextInputPhone.addTextChangedListener(textWatcher);
@@ -69,10 +69,10 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void afterTextChanged(Editable s) {
             if (s.length() > 0){
-                btnLogin.setBackgroundResource(R.drawable.round_back_red_100);
+                btnLogin.setBackgroundResource(R.drawable.round_back_red_10);
             }
             else{
-                btnLogin.setBackgroundResource(R.drawable.round_back_brown_100);
+                btnLogin.setBackgroundResource(R.drawable.round_back_brown_10);
             }
         }
     };

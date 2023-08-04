@@ -159,7 +159,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/round_back_red_100"
+        android:background="@drawable/round_back_red_10"
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
         android:text="Thêm sản phẩm"
