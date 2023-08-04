@@ -1,6 +1,7 @@
 // ProductModel.java
 package com.example.thtfood.Model;
 public class Product {
+    private String id;
     private String name;
     private String image;
     private String description;
@@ -16,12 +17,23 @@ public class Product {
         this.description = description;
         this.active = active;
     }
+    public Product(String id, String name, String image, double price, String description, boolean active) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.price = price;
+        this.description = description;
+        this.active = active;
+    }
     public boolean isActive() {
         return active;
     }
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+    public String getId() {
+        return id;
     }
     public String getName() {
         return name;

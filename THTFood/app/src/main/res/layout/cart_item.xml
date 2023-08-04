@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#F6F5F5"
+    android:backgroundTint="#F1EEEE"
     android:padding="16dp">
 
     <ImageView
@@ -16,9 +20,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginStart="16dp"
         android:layout_toEndOf="@id/productImageView"
-        android:layout_marginStart="16dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/orderInfoTextView"
@@ -46,12 +50,21 @@
 
     </LinearLayout>
 
-    <Button
+    <ImageButton
         android:id="@+id/removeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:text="Xóa" />
+        android:layout_marginLeft="320dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/circle_remove"
+        app:srcCompat="@drawable/baseline_remove_24"
+        app:tint="@color/white" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/productImageView"
+        android:layout_marginTop="15dp"
+        android:background="#C5C3C3" />
 
 </RelativeLayout>
