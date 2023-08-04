@@ -2,10 +2,12 @@ package com.example.thtfood.Controller;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.thtfood.Model.Order;
 import com.example.thtfood.Model.User;
 import com.example.thtfood.Model.UserManager;
 import com.example.thtfood.R;
@@ -30,6 +33,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,8 +53,8 @@ public class RestaurantManagerFragment extends Fragment {
     ImageButton imageButtonMenu;
     private ImageView restaurantAvatar;
     private TextView restaurantName;
+    private TextView textViewRevenueToday;
     Switch switchActiveRestaurant;
-
     private TextView textViewStateAcitve;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -89,6 +97,7 @@ public class RestaurantManagerFragment extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -96,8 +105,10 @@ public class RestaurantManagerFragment extends Fragment {
         restaurantAvatar = view.findViewById(R.id.imageViewRestaurant);
         restaurantName = view.findViewById(R.id.textViewRestaurantName);
         imageButtonMenu = view.findViewById(R.id.imageButtonMenu);
-        switchActiveRestaurant  = view.findViewById(R.id.switchActiveRestaurant);
+        switchActiveRestaurant = view.findViewById(R.id.switchActiveRestaurant);
         textViewStateAcitve = view.findViewById(R.id.textViewStateAcitve);
+        textViewRevenueToday = view.findViewById(R.id.textViewRevenueToday);
+        LocalDate today = LocalDate.now();
         switchActiveRestaurant.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -110,6 +121,33 @@ public class RestaurantManagerFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), MenuRestaurantActivity.class));
+            }
+        });
+
+        DatabaseReference orderRef = FirebaseDatabase.getInstance().getReference().child("orders").child(restaurantId);
+        orderRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                double total = 0;
+                NumberFormat vndFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                if (snapshot.exists()) {
+
+
+                    for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
+                        String orderDate = orderSnapshot.child("orderDate").getValue(String.class);
+                        int totalAmount = orderSnapshot.child("totalAmount").getValue(Integer.class);
+                        LocalDate Date = LocalDate.parse(orderDate, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm", Locale.getDefault()));
+                        if (Date.equals(today)) {
+                            total += totalAmount;
+                        }
+                    }
+                }
+                textViewRevenueToday.setText(vndFormat.format(total));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
 
@@ -134,12 +172,12 @@ public class RestaurantManagerFragment extends Fragment {
         return view;
     }
 
-    private void handleActiveRestaurant(boolean active){
-        if(active){
+    private void handleActiveRestaurant(boolean active) {
+        if (active) {
 
             textViewStateAcitve.setText("Đang hoạt động");
             textViewStateAcitve.setTextColor(Color.parseColor("#34c759"));
-        } else{
+        } else {
             textViewStateAcitve.setText("Ngưng hoạt động");
             textViewStateAcitve.setTextColor(Color.parseColor("#FF1744"));
         }
