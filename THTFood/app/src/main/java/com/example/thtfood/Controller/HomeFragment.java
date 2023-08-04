@@ -93,6 +93,10 @@ public class HomeFragment extends Fragment {
                 horizontalLayout.removeAllViews();
                 verticalLayout.removeAllViews();
                 for (DataSnapshot restaurantSnapshot : snapshot.getChildren()) {
+                    Boolean isActive = restaurantSnapshot.child("active").getValue(Boolean.class);
+                    if (isActive != null && !isActive) {
+                        continue;
+                    }
                     // Lấy thông tin của nhà hàng từ dataSnapshot
                     String restaurantName = restaurantSnapshot.child("name").getValue(String.class);
                     String restaurantImageURL = restaurantSnapshot.child("avatar_path").getValue(String.class);

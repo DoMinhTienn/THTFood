@@ -14,6 +14,53 @@
         android:layout_height="735dp"
         android:layout_gravity="center_horizontal"
         android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imageButtonQuit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="0dp"
+                android:background="@android:color/transparent"
+                android:elevation="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/baseline_chevron_left_24" />
+
+
+            <ImageView
+                android:id="@+id/imageViewcart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="330dp"
+                android:layout_marginTop="0dp"
+                android:src="@drawable/baseline_shopping_cart_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/sizecart"
+                android:layout_width="15dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/circle_bg"
+                android:backgroundTint="#F40B0B"
+                android:text="5"
+                android:textAlignment="center"
+                android:textColor="#F10F5A"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
 
         <!-- Nội dung khác ở đây -->
         <ImageView
@@ -21,6 +68,7 @@
             android:layout_width="411dp"
             android:layout_height="180dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="-10dp"
             android:src="@drawable/bread" />
 
         <View
