@@ -19,12 +19,12 @@ public class Order {
         this.products = products;
     }
 
-    public String getOrderId() {
+    public String getUserId() {
         return UserId;
     }
 
-    public void setOrderId(String orderId) {
-        this.UserId = orderId;
+    public void setUserId(String UserId) {
+        this.UserId = UserId;
     }
 
     public String getOrderDate() {

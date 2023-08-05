@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import java.text.NumberFormat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,7 @@ public class RestaurantActivity extends AppCompatActivity {
         setContentView(R.layout.activity_restaurant);
 
         cartViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance(getApplication())).get(CartViewModel.class);
+        cartViewModel.loadCartItemsFromSharedPreferences(getApplication().getApplicationContext());
         imageRestarant = findViewById(R.id.imageRestarant);
         nameTextView = findViewById(R.id.nameRes);
         addressTextView = findViewById(R.id.adressRes);
@@ -128,6 +130,7 @@ public class RestaurantActivity extends AppCompatActivity {
                             intent.putExtra("product_Key", product.getId());
                             intent.putExtra("product_name", product.getName());
                             intent.putExtra("product_price", product.getPrice());
+                            intent.putExtra("descriptionmenu", product.getDescription());
                             startActivity(intent);
                         }
                     });
@@ -159,7 +162,7 @@ public class RestaurantActivity extends AppCompatActivity {
         cartViewModel.getCartItemsLiveData().observe(this, new Observer<List<CartItem>>() {
             @Override
             public void onChanged(List<CartItem> cartItems) {
-                sizecart.setText(String.valueOf(cartViewModel.getCartItemCount()));
+                updateCartItemCount(cartItems);
             }
         });
 
@@ -167,15 +170,21 @@ public class RestaurantActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Reload or refresh your activity here
         cartViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance(getApplication())).get(CartViewModel.class);
+        cartViewModel.loadCartItemsFromSharedPreferences(getApplication().getApplicationContext());
         cartViewModel.getCartItemsLiveData().observe(this, new Observer<List<CartItem>>() {
             @Override
             public void onChanged(List<CartItem> cartItems) {
-                sizecart.setText(String.valueOf(cartViewModel.getCartItemCount()));
+                updateCartItemCount(cartItems);
             }
         });
 
     }
-
+    private void updateCartItemCount(List<CartItem> cartItems) {
+        // Sử dụng cartItems để cập nhật số lượng giỏ hàng trên giao diện
+        if (cartItems != null) {
+            int cartItemCount = cartItems.size();
+            sizecart.setText(String.valueOf(cartItemCount));
+        }
+    }
 }
