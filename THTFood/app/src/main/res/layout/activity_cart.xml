@@ -26,32 +26,31 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/baseline_chevron_left_24" />
 
+        <TextView
+            android:id="@+id/TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:gravity="center|center_horizontal"
+            android:text="GIỎ HÀNG"
+            android:textSize="25sp" />
+
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="757dp"
-        android:gravity="center|center_horizontal"
-        android:text="GIỎ HÀNG"
-        android:textSize="25sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="516dp"
+        android:layout_height="400dp"
         android:layout_above="@+id/totalPriceTextView"
-        android:layout_marginBottom="33dp" />
+        android:layout_marginBottom="8dp" />
 
     <TextView
         android:id="@+id/totalPriceTextView"
         android:layout_width="353dp"
         android:layout_height="38dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="125dp"
+        android:layout_marginBottom="90dp"
         android:gravity="center|right"
         android:text="Tổng tiền: 0 VND"
         android:textSize="20sp" />
@@ -63,9 +62,9 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/button_background_opacity"
         android:gravity="center|center_horizontal"
         android:text="Đặt hàng"

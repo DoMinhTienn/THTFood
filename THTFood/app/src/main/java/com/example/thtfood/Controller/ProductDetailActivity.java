@@ -21,17 +21,21 @@ import com.example.thtfood.Model.CartItem;
 
 import com.example.thtfood.R;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ProductDetailActivity extends AppCompatActivity {
     private int quantity = 1;
     private String productId;
     private String productName;
     private  double productPrice;
+    private String description;
     private String restaurantKey;
     private CartViewModel cartViewModel;
     private ImageButton imageButtonQuit;
+    private TextView sizecart;
 
 
     @Override
@@ -42,12 +46,12 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         TextView textViewProductName = findViewById(R.id.productName);
         TextView textViewProductPrice = findViewById(R.id.productPrice);
-        TextView sizecart = findViewById(R.id.sizecart);
-
+        sizecart = findViewById(R.id.sizecart);
+        TextView textdes  = findViewById(R.id.textdes);
         cartViewModel.getCartItemsLiveData().observe(this, new Observer<List<CartItem>>() {
             @Override
             public void onChanged(List<CartItem> cartItems) {
-                sizecart.setText(String.valueOf(cartViewModel.getCartItemCount()));
+                updateCartItemCount(cartItems);
             }
         });
 
@@ -58,16 +62,17 @@ public class ProductDetailActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+        NumberFormat vndFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         Intent intent = getIntent();
         if (intent != null) {
             restaurantKey = intent.getStringExtra("restaurantKey");
             productId =  intent.getStringExtra("product_Key");
             productName = intent.getStringExtra("product_name");
             productPrice = intent.getDoubleExtra("product_price", 0);
-
+            description =  intent.getStringExtra("descriptionmenu");
             textViewProductName.setText(productName);
-            textViewProductPrice.setText(String.valueOf(productPrice));
+            textViewProductPrice.setText(String.valueOf(vndFormat.format(productPrice)));
+            textdes.setText(description);
         }
 
         Button decreaseQuantityBtn = findViewById(R.id.decreaseQuantityBtn);
@@ -114,4 +119,25 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cartViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance(getApplication())).get(CartViewModel.class);
+        cartViewModel.loadCartItemsFromSharedPreferences(getApplication().getApplicationContext());
+        cartViewModel.getCartItemsLiveData().observe(this, new Observer<List<CartItem>>() {
+            @Override
+            public void onChanged(List<CartItem> cartItems) {
+                updateCartItemCount(cartItems);
+            }
+        });
+
+    }
+    private void updateCartItemCount(List<CartItem> cartItems) {
+        // Sử dụng cartItems để cập nhật số lượng giỏ hàng trên giao diện
+        if (cartItems != null) {
+            int cartItemCount = cartItems.size();
+            sizecart.setText(String.valueOf(cartItemCount));
+        }
+    }
+
 }

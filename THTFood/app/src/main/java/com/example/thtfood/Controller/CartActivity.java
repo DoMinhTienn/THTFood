@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,6 +76,7 @@ public class CartActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(cartAdapter);
 
+        NumberFormat vndFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         cartAdapter.setOnRemoveItemClickListener(new CartAdapter.OnRemoveItemClickListener() {
             @Override
             public void onRemoveItemClick(int position) {
@@ -82,17 +84,18 @@ public class CartActivity extends AppCompatActivity {
                 cartViewModel.saveCartItemsToSharedPreferences(CartActivity.this);
 
                 double total = cartViewModel.calculateTotal();
-                totalPriceTextView.setText("Tổng tiền: " + total + " VND");
+                totalPriceTextView.setText("Tổng tiền: " + (vndFormat.format(total)));
 
             }
         });
         // Quan sát LiveData và cập nhật giao diện khi dữ liệu thay đổi
+
         cartViewModel.getCartItemsLiveData().observe(this, new Observer<List<CartItem>>() {
             @Override
             public void onChanged(List<CartItem> cartItems) {
                 cartAdapter.updateCart(cartItems);
                 double total = cartViewModel.calculateTotal();
-                totalPriceTextView.setText("Tổng tiền: " + total + " VND");
+                totalPriceTextView.setText("Tổng tiền: " + (vndFormat.format(total)) );
             }
         });
 
@@ -131,12 +134,12 @@ public class CartActivity extends AppCompatActivity {
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
                 // Tạo một đối tượng Order
-                String orderId = billRef.push().getKey();
+                String BillId = billRef.push().getKey();
                 Order order = new Order(currentUser.getUid(),orderDate, totalAmount, products);
 
                 // Lưu thông tin đơn hàng vào Firebase
 
-                billRef.child(orderId).setValue(order)
+                billRef.child(BillId).setValue(order)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
