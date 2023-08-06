@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.thtfood.Model.CartItem;
 import com.example.thtfood.R;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
@@ -42,10 +44,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        NumberFormat vndFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         CartItem cartItem = cartItems.get(position);
         holder.productNameTextView.setText(cartItem.getProductName());
         holder.quantityTextView.setText("Số lượng: " + String.valueOf(cartItem.getQuantity()));
-        holder.priceTextView.setText("Giá: " + String.valueOf(cartItem.getProductPrice()));
+        holder.priceTextView.setText("Giá: " + String.valueOf(vndFormat.format(cartItem.getProductPrice())));
 
         holder.removeButton.setOnClickListener(new View.OnClickListener() {
             @Override

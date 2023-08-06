@@ -9,184 +9,204 @@
     android:padding="1sp"
     tools:context=".Controller.ProductDetailActivity">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="735dp"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="584dp">
+
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="0dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/imageButtonQuit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="0dp"
-                android:background="@android:color/transparent"
-                android:elevation="2dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/baseline_chevron_left_24" />
-
-
-            <ImageView
-                android:id="@+id/imageViewcart"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="330dp"
-                android:layout_marginTop="0dp"
-                android:src="@drawable/baseline_shopping_cart_24"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/sizecart"
-                android:layout_width="15dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="0dp"
-                android:background="@drawable/circle_bg"
-                android:backgroundTint="#F40B0B"
-                android:text="5"
-                android:textAlignment="center"
-                android:textColor="#F10F5A"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-
-
-        </LinearLayout>
-
-        <!-- Nội dung khác ở đây -->
-        <ImageView
-            android:id="@+id/productImage"
-            android:layout_width="411dp"
-            android:layout_height="180dp"
+            android:layout_width="wrap_content"
+            android:layout_height="584dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="-10dp"
-            android:src="@drawable/bread" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="1dp"
-            android:background="#DFDDDD" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/productName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
-                android:layout_weight="1"
-                android:text="Sườn xào chua ngọt"
-                android:textSize="28sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/productPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="15dp"
-                android:text="50.000 "
-                android:textSize="25sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="#F3F2F2" />
-
-        <LinearLayout
-            android:layout_width="400dp"
-            android:layout_height="214dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="15sp">
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="0dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/text1"
+                <ImageButton
+                    android:id="@+id/imageButtonQuit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Thêm lưu ý cho quán "
-                    android:textSize="20sp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="0dp"
+                    android:background="@android:color/transparent"
+                    android:elevation="2dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/baseline_chevron_left_24" />
+
+
+                <ImageView
+                    android:id="@+id/imageViewcart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="330dp"
+                    android:layout_marginTop="0dp"
+                    android:src="@drawable/baseline_shopping_cart_24"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/sizecart"
+                    android:layout_width="15dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="0dp"
+                    android:background="@drawable/circle_bg"
+                    android:backgroundTint="#F40B0B"
+                    android:text="5"
+                    android:textAlignment="center"
+                    android:textColor="#F10F5A"
+                    android:textSize="16dp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/text2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="(không bắt buộc)"
-                    android:textSize="18sp" />
 
             </LinearLayout>
+
+            <!-- Nội dung khác ở đây -->
+            <ImageView
+                android:id="@+id/productImage"
+                android:layout_width="411dp"
+                android:layout_height="168dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="-10dp"
+                android:src="@drawable/bread" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="1dp"
+                android:background="#DFDDDD" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/productName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_weight="1"
+                    android:text="Sườn xào chua ngọt"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/productPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="15dp"
+                    android:text="50.000 "
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="5dp"
                 android:background="#DDDBDB" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="110dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/decreaseQuantityBtn"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/button_background"
-                android:text="-"
-                android:textSize="25dp" />
 
             <TextView
-                android:id="@+id/quantity"
+                android:id="@+id/textdes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:text="1"
-                android:textSize="25sp" />
+                android:layout_marginLeft="15dp"
+                android:text="Thịt chó ngon lắm thử đi"
+                android:textSize="20sp" />
 
-            <Button
-                android:id="@+id/increaseQuantityBtn"
-                android:layout_width="60dp"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="#F3F2F2" />
+
+            <LinearLayout
+                android:layout_width="400dp"
+                android:layout_height="138dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="15sp">
+
+                    <TextView
+                        android:id="@+id/text1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Thêm lưu ý cho quán "
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="(không bắt buộc)"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="#DDDBDB" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_background"
-                android:text="+"
-                android:textSize="25dp" />
-        </LinearLayout>
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="120dp"
+                android:orientation="horizontal">
 
-    </LinearLayout>
+                <Button
+                    android:id="@+id/decreaseQuantityBtn"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/button_background"
+                    android:text="-"
+                    android:textSize="25dp" />
+
+                <TextView
+                    android:id="@+id/quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="1"
+                    android:textSize="25sp" />
+
+                <Button
+                    android:id="@+id/increaseQuantityBtn"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_background"
+                    android:text="+"
+                    android:textSize="25dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
     <View
         android:layout_width="match_parent"
@@ -200,8 +220,8 @@
         android:layout_width="345dp"
         android:layout_height="63dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
         android:background="@drawable/button_background_opacity"
-        android:layout_marginTop="10dp"
         android:text="Thêm vào giỏ hàng"
         android:textSize="20sp" />
 

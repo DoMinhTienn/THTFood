@@ -11,6 +11,9 @@ import com.bumptech.glide.Glide;
 import com.example.thtfood.Model.Product;
 import com.example.thtfood.R;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import java.util.List;
 
 
@@ -41,9 +44,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
+        NumberFormat vndFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         Product product = productList.get(position);
         holder.textViewProductName.setText(product.getName());
-        holder.textViewProductPrice.setText(String.valueOf(product.getPrice()));
+        holder.textViewProductPrice.setText(String.valueOf(vndFormat.format(product.getPrice())));
         Glide.with(holder.imageViewProduct.getContext())
                 .load(product.getImage())
                 .into(holder.imageViewProduct);
