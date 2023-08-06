@@ -50,8 +50,9 @@ public class RestaurantManagerFragment extends Fragment {
     FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     String restaurantId = currentUser.getUid();
     DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants").child(restaurantId);
-    ImageButton imageButtonMenu;
+    ImageButton imageButtonMenu, imageButtonInfo;
     private ImageView restaurantAvatar;
+
     private TextView restaurantName;
     private TextView textViewRevenueToday;
     Switch switchActiveRestaurant;
@@ -105,6 +106,7 @@ public class RestaurantManagerFragment extends Fragment {
         restaurantAvatar = view.findViewById(R.id.imageViewRestaurant);
         restaurantName = view.findViewById(R.id.textViewRestaurantName);
         imageButtonMenu = view.findViewById(R.id.imageButtonMenu);
+        imageButtonInfo = view.findViewById(R.id.imageButtonInfo);
         switchActiveRestaurant = view.findViewById(R.id.switchActiveRestaurant);
         textViewStateAcitve = view.findViewById(R.id.textViewStateAcitve);
         textViewRevenueToday = view.findViewById(R.id.textViewRevenueToday);
@@ -123,6 +125,14 @@ public class RestaurantManagerFragment extends Fragment {
                 startActivity(new Intent(getActivity(), MenuRestaurantActivity.class));
             }
         });
+
+        imageButtonInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), InfoRestaurantActivity.class));
+            }
+        });
+
 
         DatabaseReference orderRef = FirebaseDatabase.getInstance().getReference().child("orders").child(restaurantId);
         orderRef.addListenerForSingleValueEvent(new ValueEventListener() {
