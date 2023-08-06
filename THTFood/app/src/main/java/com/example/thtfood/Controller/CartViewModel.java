@@ -18,13 +18,19 @@ import java.util.List;
 
 public class CartViewModel extends AndroidViewModel  {
     private MutableLiveData<List<CartItem>> cartItemsLiveData = new MutableLiveData<>();
+    private String ResId;
     private List<CartItem> cartItems = new ArrayList<>();
 
     public CartViewModel(@NonNull Application application) {
         super(application);
         loadCartItemsFromSharedPreferences(application.getApplicationContext());
     }
-
+    public void SetResId(String resId){
+        this.ResId = resId;
+    }
+    public String getResId(){
+        return this.ResId;
+}
     public LiveData<List<CartItem>> getCartItemsLiveData() {
         return cartItemsLiveData;
     }
@@ -58,6 +64,10 @@ public class CartViewModel extends AndroidViewModel  {
         return cartItems;
     }
 
+    public int getCartItemCount() {
+        return cartItems.size();
+    }
+
     public double calculateTotal() {
         double total = 0;
         for (CartItem cartItem : cartItems) {
@@ -72,6 +82,7 @@ public class CartViewModel extends AndroidViewModel  {
         Gson gson = new Gson();
         String jsonCartItems = gson.toJson(cartItems);
         editor.putString("cartItems", jsonCartItems);
+        editor.putString("ResId", ResId);
         editor.apply();
     }
 
@@ -84,9 +95,12 @@ public class CartViewModel extends AndroidViewModel  {
         if (cartItems == null) {
             cartItems = new ArrayList<>();
         }
+        ResId = sharedPreferences.getString("ResId", null);
         cartItemsLiveData.setValue(new ArrayList<>(cartItems));
     }
-
+    public void clearCart() {
+        cartItems.clear();
+    }
     public void clearCartItemsFromSharedPreferences(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("cart", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
