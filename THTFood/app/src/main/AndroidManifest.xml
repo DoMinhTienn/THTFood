@@ -16,6 +16,9 @@
             android:name=".Controller.InfoRestaurantActivity"
             android:exported="false" />
         <activity
+            android:name=".Controller.StatisticsActivity"
+            android:exported="false" />
+        <activity
             android:name=".Controller.CartActivity"
             android:exported="false" />
         <activity

@@ -50,7 +50,7 @@ public class RestaurantManagerFragment extends Fragment {
     FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     String restaurantId = currentUser.getUid();
     DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants").child(restaurantId);
-    ImageButton imageButtonMenu, imageButtonInfo;
+    ImageButton imageButtonMenu, imageButtonInfo, imageButtonStatistics;
     private ImageView restaurantAvatar;
 
     private TextView restaurantName;
@@ -107,10 +107,18 @@ public class RestaurantManagerFragment extends Fragment {
         restaurantName = view.findViewById(R.id.textViewRestaurantName);
         imageButtonMenu = view.findViewById(R.id.imageButtonMenu);
         imageButtonInfo = view.findViewById(R.id.imageButtonInfo);
+        imageButtonStatistics = view.findViewById(R.id.imageButtonStatistics);
         switchActiveRestaurant = view.findViewById(R.id.switchActiveRestaurant);
         textViewStateAcitve = view.findViewById(R.id.textViewStateAcitve);
         textViewRevenueToday = view.findViewById(R.id.textViewRevenueToday);
         LocalDate today = LocalDate.now();
+
+        imageButtonStatistics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), StatisticsActivity.class));
+            }
+        });
         switchActiveRestaurant.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
