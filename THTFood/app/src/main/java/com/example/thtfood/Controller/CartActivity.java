@@ -1,6 +1,8 @@
 package com.example.thtfood.Controller;
 
 import androidx.annotation.NonNull;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -71,6 +73,16 @@ public class CartActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        cartViewModel.getCartItemsLiveData().observe(this, new Observer<List<CartItem>>() {
+            @Override
+            public void onChanged(List<CartItem> cartItems) {
+                if(cartItems.size() == 0)
+                    saveCart.setEnabled(false);
+                else
+                    saveCart.setEnabled(true);
+            }
+        });
         // Khởi tạo CartAdapter với một danh sách rỗng ban đầu
         cartAdapter = new CartAdapter(cartViewModel.getCartItems());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -104,58 +116,74 @@ public class CartActivity extends AppCompatActivity {
         saveCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseReference ordersRef = FirebaseDatabase.getInstance().getReference().child("orders");
-
-                ordersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                AlertDialog.Builder alertDialog;
+                alertDialog = new AlertDialog.Builder(CartActivity.this);
+                alertDialog.setMessage("Xác nhận đặt hàng");
+                alertDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.hasChild(restaurantKey)) {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        DatabaseReference ordersRef = FirebaseDatabase.getInstance().getReference().child("orders");
 
-                        } else {
-                            ordersRef.setValue(restaurantKey);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        // Xử lý lỗi nếu có
-                    }
-                });
-                DatabaseReference billRef = FirebaseDatabase.getInstance().getReference().child("orders").child(restaurantKey);
-                // Lấy danh sách các sản phẩm trong giỏ hàng từ CartViewModel
-                List<CartItem> products = cartViewModel.getCartItems();
-
-                // Tính tổng tiền của giỏ hàng
-                double totalAmount = cartViewModel.calculateTotal();
-
-                // Lấy ngày đặt hàng
-                String orderDate = getCurrentDate();
-                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-
-                // Tạo một đối tượng Order
-                String BillId = billRef.push().getKey();
-                Order order = new Order(currentUser.getUid(),orderDate, totalAmount, products);
-
-                // Lưu thông tin đơn hàng vào Firebase
-
-                billRef.child(BillId).setValue(order)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        ordersRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(CartActivity.this, "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
-                                    // Xóa giỏ hàng sau khi đã lưu đơn hàng thành công
-                                    cartViewModel.clearCartItemsFromSharedPreferences(CartActivity.this);
-                                    cartViewModel.clearCart();
-                                    cartViewModel.saveCartItemsToSharedPreferences(CartActivity.this);
-                                    cartAdapter.updateCart(new ArrayList<>());
-                                    totalPriceTextView.setText("Tổng tiền: 0 VND");
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.hasChild(restaurantKey)) {
+
                                 } else {
-                                    Toast.makeText(CartActivity.this, "Lỗi khi lưu đơn hàng", Toast.LENGTH_SHORT).show();
+                                    ordersRef.setValue(restaurantKey);
                                 }
                             }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                // Xử lý lỗi nếu có
+                            }
                         });
+                        DatabaseReference billRef = FirebaseDatabase.getInstance().getReference().child("orders").child(restaurantKey);
+                        // Lấy danh sách các sản phẩm trong giỏ hàng từ CartViewModel
+                        List<CartItem> products = cartViewModel.getCartItems();
+
+                        // Tính tổng tiền của giỏ hàng
+                        double totalAmount = cartViewModel.calculateTotal();
+
+                        // Lấy ngày đặt hàng
+                        String orderDate = getCurrentDate();
+                        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
+                        // Tạo một đối tượng Order
+                        String BillId = billRef.push().getKey();
+                        Order order = new Order(currentUser.getUid(),orderDate, totalAmount, products);
+
+                        // Lưu thông tin đơn hàng vào Firebase
+
+                        billRef.child(BillId).setValue(order)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(CartActivity.this, "Đặt hàng thành công", Toast.LENGTH_SHORT).show();
+                                            // Xóa giỏ hàng sau khi đã lưu đơn hàng thành công
+                                            cartViewModel.clearCartItemsFromSharedPreferences(CartActivity.this);
+                                            cartViewModel.clearCart();
+                                            cartViewModel.saveCartItemsToSharedPreferences(CartActivity.this);
+                                            cartAdapter.updateCart(new ArrayList<>());
+                                            totalPriceTextView.setText("Tổng tiền: 0 VND");
+                                        } else {
+                                            Toast.makeText(CartActivity.this, "Lỗi khi lưu đơn hàng", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    }
+                });
+                alertDialog.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog alert=alertDialog.create();
+                alert.show();
             }
         });
     }

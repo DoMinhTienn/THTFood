@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -40,7 +41,8 @@ public class HomeFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     LinearLayout horizontalLayout;
-
+    LinearLayout verticalLayout;
+    SearchView searchView;
     DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants");
     List<Restaurant> restaurantList = new ArrayList<>();
 
@@ -79,85 +81,177 @@ public class HomeFragment extends Fragment {
         }
 
     }
+    private void setupSearchView() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Lọc dữ liệu theo tên nhà hàng
+                // Gọi lại phương thức lấy dữ liệu từ Firebase với điều kiện lọc tên nhà hàng
+                loadRestaurantData(newText);
+                return true;
+            }
+        });
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        LinearLayout horizontalLayout = view.findViewById(R.id.horizontal_layout);
-        LinearLayout verticalLayout = view.findViewById(R.id.vertical_layout);
+        horizontalLayout = view.findViewById(R.id.horizontal_layout);
+        verticalLayout = view.findViewById(R.id.vertical_layout);
+        searchView = view.findViewById(R.id.searchView);
+        setupSearchView();
+        loadRestaurantData("");
 
-
+        return view;
+    }
+    private void loadRestaurantData(String searchKeyword) {
         restaurantsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 horizontalLayout.removeAllViews();
                 verticalLayout.removeAllViews();
-                for (DataSnapshot restaurantSnapshot : snapshot.getChildren()) {
-                    Boolean isActive = restaurantSnapshot.child("active").getValue(Boolean.class);
-                    if (isActive != null && !isActive) {
-                        continue;
+                if (searchKeyword.isEmpty()) {
+                    for (DataSnapshot restaurantSnapshot : snapshot.getChildren()) {
+                        Boolean isActive = restaurantSnapshot.child("active").getValue(Boolean.class);
+                        if (isActive != null && !isActive) {
+                            continue;
+                        }
+                        // Lấy thông tin của nhà hàng từ dataSnapshot
+                        String restaurantName = restaurantSnapshot.child("name").getValue(String.class);
+                        String restaurantImageURL = restaurantSnapshot.child("avatar_path").getValue(String.class);
+                        DataSnapshot addressSnapshot = restaurantSnapshot.child("address");
+                        String city = addressSnapshot.child("city").getValue(String.class);
+                        String district = addressSnapshot.child("district").getValue(String.class);
+                        String ward = addressSnapshot.child("ward").getValue(String.class);
+                        String address = ward + " " + district + " " + city;
+                        String restaurantKey = restaurantSnapshot.getKey();
+
+                        boolean restaurantIsActive = restaurantSnapshot.child("active").getValue(Boolean.class);
+
+                        // Tạo cardView từ reshor_card layout
+                        View cardView = getLayoutInflater().inflate(R.layout.reshor_card, horizontalLayout, false);
+                        View cardView2 = getLayoutInflater().inflate(R.layout.resver_card, verticalLayout, false);
+
+                        ImageView imageView = cardView.findViewById(R.id.image_view);
+                        TextView titleTextView = cardView.findViewById(R.id.title_text_view);
+                        TextView subtitleTextView = cardView.findViewById(R.id.subtitle_text_view);
+
+                        ImageView imageView2 = cardView2.findViewById(R.id.image_view2);
+                        TextView titleTextView2 = cardView2.findViewById(R.id.title_text_view2);
+                        TextView subtitleTextView2 = cardView2.findViewById(R.id.subtitle_text_view2);
+
+
+                        Glide.with(getActivity()).load(restaurantImageURL).into(imageView);
+                        titleTextView.setText(restaurantName);
+                        subtitleTextView.setText(address);
+
+                        Glide.with(getActivity()).load(restaurantImageURL).into(imageView2);
+                        titleTextView2.setText(restaurantName);
+                        subtitleTextView2.setText(address);
+                        cardView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // Tạo Intent và truyền dữ liệu của nhà hàng qua Intent
+                                Intent intent = new Intent(getActivity(), RestaurantActivity.class);
+                                intent.putExtra("name", restaurantName);
+                                intent.putExtra("address", address);
+                                intent.putExtra("avatar", restaurantImageURL);
+                                intent.putExtra("restaurantKey", restaurantKey);
+                                startActivity(intent);
+                            }
+                        });
+                        cardView2.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // Tạo Intent và truyền dữ liệu của nhà hàng qua Intent
+                                Intent intent = new Intent(getActivity(), RestaurantActivity.class);
+                                intent.putExtra("name", restaurantName);
+                                intent.putExtra("address", address);
+                                intent.putExtra("avatar", restaurantImageURL);
+                                intent.putExtra("restaurantKey", restaurantKey);
+                                startActivity(intent);
+                            }
+                        });
+                        // Thêm cardView vào horizontalLayout
+                        horizontalLayout.addView(cardView);
+                        verticalLayout.addView(cardView2);
+
                     }
-                    // Lấy thông tin của nhà hàng từ dataSnapshot
-                    String restaurantName = restaurantSnapshot.child("name").getValue(String.class);
-                    String restaurantImageURL = restaurantSnapshot.child("avatar_path").getValue(String.class);
-                    DataSnapshot addressSnapshot = restaurantSnapshot.child("address");
-                    String city = addressSnapshot.child("city").getValue(String.class);
-                    String district = addressSnapshot.child("district").getValue(String.class);
-                    String ward = addressSnapshot.child("ward").getValue(String.class);
-                    String address = ward + " " + district + " " + city;
-                    String restaurantKey = restaurantSnapshot.getKey();
-
-                    boolean restaurantIsActive = restaurantSnapshot.child("active").getValue(Boolean.class);
-
-                    // Tạo cardView từ reshor_card layout
-                    View cardView = getLayoutInflater().inflate(R.layout.reshor_card, horizontalLayout, false);
-                    View cardView2 = getLayoutInflater().inflate(R.layout.resver_card, verticalLayout, false);
-
-                    ImageView imageView = cardView.findViewById(R.id.image_view);
-                    TextView titleTextView = cardView.findViewById(R.id.title_text_view);
-                    TextView subtitleTextView = cardView.findViewById(R.id.subtitle_text_view);
-
-                    ImageView imageView2 = cardView2.findViewById(R.id.image_view2);
-                    TextView titleTextView2 = cardView2.findViewById(R.id.title_text_view2);
-                    TextView subtitleTextView2 = cardView2.findViewById(R.id.subtitle_text_view2);
-
-
-                    Glide.with(getActivity()).load(restaurantImageURL).into(imageView);
-                    titleTextView.setText(restaurantName);
-                    subtitleTextView.setText(address);
-
-                    Glide.with(getActivity()).load(restaurantImageURL).into(imageView2);
-                    titleTextView2.setText(restaurantName);
-                    subtitleTextView2.setText(address);
-                    cardView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // Tạo Intent và truyền dữ liệu của nhà hàng qua Intent
-                            Intent intent = new Intent(getActivity(), RestaurantActivity.class);
-                            intent.putExtra("name", restaurantName);
-                            intent.putExtra("address", address);
-                            intent.putExtra("avatar", restaurantImageURL);
-                            intent.putExtra("restaurantKey", restaurantKey);
-                            startActivity(intent);
+                }
+                else
+                {
+                    for (DataSnapshot restaurantSnapshot : snapshot.getChildren()) {
+                        Boolean isActive = restaurantSnapshot.child("active").getValue(Boolean.class);
+                        if (isActive != null && !isActive) {
+                            continue;
                         }
-                    });
-                    cardView2.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // Tạo Intent và truyền dữ liệu của nhà hàng qua Intent
-                            Intent intent = new Intent(getActivity(), RestaurantActivity.class);
-                            intent.putExtra("name", restaurantName);
-                            intent.putExtra("address", address);
-                            intent.putExtra("avatar", restaurantImageURL);
-                            intent.putExtra("restaurantKey", restaurantKey);
-                            startActivity(intent);
-                        }
-                    });
-                    // Thêm cardView vào horizontalLayout
-                    horizontalLayout.addView(cardView);
-                    verticalLayout.addView(cardView2);
+                        // Lấy thông tin của nhà hàng từ dataSnapshot
+                        String restaurantName = restaurantSnapshot.child("name").getValue(String.class);
+                        String restaurantImageURL = restaurantSnapshot.child("avatar_path").getValue(String.class);
+                        DataSnapshot addressSnapshot = restaurantSnapshot.child("address");
+                        String city = addressSnapshot.child("city").getValue(String.class);
+                        String district = addressSnapshot.child("district").getValue(String.class);
+                        String ward = addressSnapshot.child("ward").getValue(String.class);
+                        String address = ward + " " + district + " " + city;
+                        String restaurantKey = restaurantSnapshot.getKey();
 
+                        boolean restaurantIsActive = restaurantSnapshot.child("active").getValue(Boolean.class);
+                        if (restaurantName.toLowerCase().contains(searchKeyword.toLowerCase())) {
+                            // Tạo cardView từ reshor_card layout
+                            View cardView = getLayoutInflater().inflate(R.layout.reshor_card, horizontalLayout, false);
+                            View cardView2 = getLayoutInflater().inflate(R.layout.resver_card, verticalLayout, false);
+
+                            ImageView imageView = cardView.findViewById(R.id.image_view);
+                            TextView titleTextView = cardView.findViewById(R.id.title_text_view);
+                            TextView subtitleTextView = cardView.findViewById(R.id.subtitle_text_view);
+
+                            ImageView imageView2 = cardView2.findViewById(R.id.image_view2);
+                            TextView titleTextView2 = cardView2.findViewById(R.id.title_text_view2);
+                            TextView subtitleTextView2 = cardView2.findViewById(R.id.subtitle_text_view2);
+
+
+                            Glide.with(getActivity()).load(restaurantImageURL).into(imageView);
+                            titleTextView.setText(restaurantName);
+                            subtitleTextView.setText(address);
+
+                            Glide.with(getActivity()).load(restaurantImageURL).into(imageView2);
+                            titleTextView2.setText(restaurantName);
+                            subtitleTextView2.setText(address);
+                            cardView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    // Tạo Intent và truyền dữ liệu của nhà hàng qua Intent
+                                    Intent intent = new Intent(getActivity(), RestaurantActivity.class);
+                                    intent.putExtra("name", restaurantName);
+                                    intent.putExtra("address", address);
+                                    intent.putExtra("avatar", restaurantImageURL);
+                                    intent.putExtra("restaurantKey", restaurantKey);
+                                    startActivity(intent);
+                                }
+                            });
+                            cardView2.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    // Tạo Intent và truyền dữ liệu của nhà hàng qua Intent
+                                    Intent intent = new Intent(getActivity(), RestaurantActivity.class);
+                                    intent.putExtra("name", restaurantName);
+                                    intent.putExtra("address", address);
+                                    intent.putExtra("avatar", restaurantImageURL);
+                                    intent.putExtra("restaurantKey", restaurantKey);
+                                    startActivity(intent);
+                                }
+                            });
+                            // Thêm cardView vào horizontalLayout
+                            horizontalLayout.addView(cardView);
+                            verticalLayout.addView(cardView2);
+                        }
+
+                    }
                 }
             }
             @Override
@@ -165,6 +259,5 @@ public class HomeFragment extends Fragment {
 
             }
         });
-        return view;
     }
 }
