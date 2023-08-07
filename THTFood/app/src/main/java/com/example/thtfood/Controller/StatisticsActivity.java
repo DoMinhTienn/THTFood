@@ -29,6 +29,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -66,42 +68,64 @@ public class StatisticsActivity extends AppCompatActivity {
 
         recyclerViewMenu.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerViewMenu.setAdapter(statisticsAdapter);
+        handleData(selectedPosition);
+
+        statisticsAdapter.setOnItemClickListener(new StatisticsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                selectedPosition = position;
+                statisticsAdapter.setSelectedPosition(position);
+                dailyTotalOrders.clear();
+                handleData(position);
+            }
+        });
+    }
+
+    private void handleData(int position) {
         ordersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
-                    String orderDate = orderSnapshot.child("orderDate").getValue(String.class);
-                    LocalDate Date = LocalDate.parse(orderDate, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm", Locale.getDefault()));
-                    String dayOfMonth = String.valueOf(Date.getDayOfMonth());
-                    double orderTotal = orderSnapshot.child("totalAmount").getValue(Double.class);
-                    if (selectedPosition == 0) {
-                        String key = dayOfMonth + "/" + date.getMonthValue() + "/" + date.getYear();
-                        if (dailyTotalOrders.containsKey(key)) {
-                            double currentTotal = dailyTotalOrders.get(key);
-                            dailyTotalOrders.put(key, currentTotal + orderTotal);
-                        } else {
-                            dailyTotalOrders.put(key, orderTotal);
-                        }
-                    } else if (selectedPosition == 1) {
-                        key = date.getMonthValue() + "/" + date.getYear();
-                        if (dailyTotalOrders.containsKey(key)) {
-                            double currentTotal = dailyTotalOrders.get(key);
-                            dailyTotalOrders.put(key, currentTotal + orderTotal);
-                        } else {
-                            dailyTotalOrders.put(key, orderTotal);
-                        }
+                if (snapshot.exists()) {
+                    for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
+                        String orderDate = orderSnapshot.child("orderDate").getValue(String.class);
+                        LocalDate currentDate = LocalDate.parse(orderDate, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm", Locale.getDefault()));
 
-                    } else {
-                        key = String.valueOf(date.getYear());
-                        if (dailyTotalOrders.containsKey(key)) {
-                            double currentTotal = dailyTotalOrders.get(key);
-                            dailyTotalOrders.put(key, currentTotal + orderTotal);
+                        double orderTotal = orderSnapshot.child("totalAmount").getValue(Double.class);
+                        String dayOfMonth = String.valueOf(currentDate.getDayOfMonth());
+                        if (position == 0) {
+                            if (currentDate.getMonthValue() == date.getMonthValue() && currentDate.getYear() == date.getYear()) {
+                                String key = dayOfMonth + "/" + currentDate.getMonthValue() + "/" + currentDate.getYear();
+                                if (dailyTotalOrders.containsKey(key)) {
+                                    double currentTotal = dailyTotalOrders.get(key);
+                                    dailyTotalOrders.put(key, currentTotal + orderTotal);
+                                } else {
+                                    dailyTotalOrders.put(key, orderTotal);
+                                }
+                            }
+                        } else if (position == 1) {
+                            if (currentDate.getYear() == date.getYear()) {
+                                key = currentDate.getMonthValue() + "/" + currentDate.getYear();
+                                if (dailyTotalOrders.containsKey(key)) {
+                                    double currentTotal = dailyTotalOrders.get(key);
+                                    dailyTotalOrders.put(key, currentTotal + orderTotal);
+                                } else {
+                                    dailyTotalOrders.put(key, orderTotal);
+                                }
+                            }
+
+
                         } else {
-                            dailyTotalOrders.put(key, orderTotal);
+                            key = String.valueOf(currentDate.getYear());
+                            if (dailyTotalOrders.containsKey(key)) {
+                                double currentTotal = dailyTotalOrders.get(key);
+                                dailyTotalOrders.put(key, currentTotal + orderTotal);
+                            } else {
+                                dailyTotalOrders.put(key, orderTotal);
+                            }
                         }
                     }
+                    setValue();
                 }
-                setValue();
             }
 
             @Override
@@ -109,33 +133,29 @@ public class StatisticsActivity extends AppCompatActivity {
 
             }
         });
-        statisticsAdapter.setOnItemClickListener(new StatisticsAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                selectedPosition = position;
-                statisticsAdapter.setSelectedPosition(position);
-                setValue();
-            }
-        });
-
     }
+
 
     private void setValue() {
         barEntryList.clear();
         title.clear();
 
-        int length = dailyTotalOrders.size();
-        int i = 1;
-        for (Map.Entry<String, Double> entry : dailyTotalOrders.entrySet()) {
+        List<Map.Entry<String, Double>> sortedEntries = new ArrayList<>(dailyTotalOrders.entrySet());
+        Collections.sort(sortedEntries, new Comparator<Map.Entry<String, Double>>() {
+            @Override
+            public int compare(Map.Entry<String, Double> entry1, Map.Entry<String, Double> entry2) {
+                return entry1.getKey().compareTo(entry2.getKey());
+            }
+        });
+
+        int i = 0;
+        for (Map.Entry<String, Double> entry : sortedEntries) {
             String key = entry.getKey();
             double total = entry.getValue();
 
             barEntryList.add(new BarEntry(i++, (float) total));
             title.add(key);
         }
-
-
-
 
         BarDataSet barDataSet = new BarDataSet(barEntryList, "");
         BarData barData = new BarData(barDataSet);
@@ -146,7 +166,9 @@ public class StatisticsActivity extends AppCompatActivity {
         barChart.getDescription().setEnabled(false);
         barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(title));
         barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        barChart.getAxisRight().setEnabled(false);
+        barChart.getXAxis().setDrawGridLines(false);
+        barChart.getLegend().setEnabled(false);
     }
-
 
 }
