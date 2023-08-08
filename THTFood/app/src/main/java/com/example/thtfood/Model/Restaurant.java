@@ -8,7 +8,8 @@ public class Restaurant {
     private Address address;
     private boolean isActive;
 
-
+    public Restaurant() {
+    }
 
     public Restaurant(String name, String avatar_path, Address address, boolean isActive) {
         this.name = name;

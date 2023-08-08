@@ -36,8 +36,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -58,6 +61,10 @@ import java.util.Map;
 public class InfoRestaurantActivity extends AppCompatActivity {
 
     public static final int REQUEST_IMAGE_GET = 1;
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+    String uid = currentUser.getUid();
+    private String originalName, originalNumber, originalStreet, originalWard, originalDistrict, originalCity, originalAvatarPath;
     private ImageButton imageButtonQuit, btnChooseImage;
     private TextView plusSign;
     private ImageView restaurantImage;
@@ -153,7 +160,73 @@ public class InfoRestaurantActivity extends AppCompatActivity {
                 onSaveRestaurantInfo();
             }
         });
+        // Lấy dữ liệu từ Firebase và hiển thị lên các trường
+        DatabaseReference restaurantRef = FirebaseDatabase.getInstance().getReference()
+                .child("restaurants")
+                .child(uid); // uid là id của nhà hàng cần lấy thông tin
 
+        restaurantRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Kiểm tra nếu nhà hàng có trong database
+                if (snapshot.exists()) {
+                    //Lấy dữ liệu từ snapshot và đổ vào các trường
+                    Restaurant restaurant = snapshot.getValue(Restaurant.class);
+                    dropdownWard = findViewById(R.id.dropdown_ward);
+                    adapterWard = new ArrayAdapter<>(InfoRestaurantActivity.this, R.layout.list);
+                    dropdownWard.setAdapter(adapterWard);
+
+                    dropdownDistrict = findViewById(R.id.dropdown_district);
+                    adapterDistrict = new ArrayAdapter<>(InfoRestaurantActivity.this, R.layout.list);
+                    dropdownDistrict.setAdapter(adapterDistrict);
+
+                    dropdownCity = findViewById(R.id.dropdown_city);
+                    adapterCity = new ArrayAdapter<>(InfoRestaurantActivity.this, R.layout.list, citiesList);
+                    dropdownCity.setAdapter(adapterCity);
+
+                    etNameRestaurant.setText(restaurant.getName());
+                    etNumber.setText(restaurant.getAddress().getNumber());
+                    etStreet.setText(restaurant.getAddress().getStreet());
+
+                    autoCompleteCity.setText(restaurant.getAddress().getCity());
+                    autoCompleteDistrict.setText(restaurant.getAddress().getDistrict());
+                    autoCompleteWard.setText(restaurant.getAddress().getWard());
+
+                    originalName = restaurant.getName();
+                    originalNumber = restaurant.getAddress().getNumber();
+                    originalStreet = restaurant.getAddress().getStreet();
+                    originalWard = restaurant.getAddress().getWard();
+                    originalDistrict = restaurant.getAddress().getDistrict();
+                    originalCity = restaurant.getAddress().getCity();
+                    originalAvatarPath = restaurant.getAvatar_path();
+
+                    // Cập nhật dữ liệu cho adapterDistrict
+                    List<String> districtsList = districtMap.get(restaurant.getAddress().getCity());
+                    if (districtsList != null) {
+                        adapterDistrict.clear();
+                        adapterDistrict.addAll(districtsList);
+                    }
+
+                    // Cập nhật dữ liệu cho adapterWard
+                    List<String> wardsList = wardMap.get(restaurant.getAddress().getDistrict());
+                    if (wardsList != null) {
+                        adapterWard.clear();
+                        adapterWard.addAll(wardsList);
+                    }
+
+                    Glide.with(InfoRestaurantActivity.this).load(originalAvatarPath).apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).into(restaurantImage);
+                    // Ẩn dấu '+' khi đã chọn hình ảnh
+                    plusSign.setVisibility(View.GONE);
+                    // Hiển thị nút "Lưu" thay vì nút "Chọn ảnh"
+                    btnChooseImage.setVisibility(View.VISIBLE);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Xử lý khi có lỗi truy vấn dữ liệu
+                Toast.makeText(InfoRestaurantActivity.this, "Lỗi truy vấn dữ liệu từ Firebase", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     private void loadData(){
         try{
@@ -278,9 +351,7 @@ public class InfoRestaurantActivity extends AppCompatActivity {
         }
     }
     public void onSaveRestaurantInfo() {
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        String uid = currentUser.getUid();
+
         String name = etNameRestaurant.getText().toString();
         String number = etNumber.getText().toString();
         String street = etStreet.getText().toString();
@@ -294,6 +365,14 @@ public class InfoRestaurantActivity extends AppCompatActivity {
 
         // Tham chiếu đến node "restaurants" trong Firebase Realtime Database
         DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants").child(uid);
+        // Cập nhật các trường dữ liệu mới vào một Map
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("name", etNameRestaurant.getText().toString());
+        updates.put("address/number", etNumber.getText().toString());
+        updates.put("address/street", etStreet.getText().toString());
+        updates.put("address/ward", autoCompleteWard.getText().toString());
+        updates.put("address/district", autoCompleteDistrict.getText().toString());
+        updates.put("address/city", autoCompleteCity.getText().toString());
         // Đặt giá trị dữ liệu của nhà hàng tại địa chỉ mới vừa tạo
         restaurantsRef.setValue(restaurant).addOnCompleteListener(new OnCompleteListener<Void>() {
 
