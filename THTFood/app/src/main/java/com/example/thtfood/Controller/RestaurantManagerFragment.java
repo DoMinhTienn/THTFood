@@ -49,6 +49,8 @@ public class RestaurantManagerFragment extends Fragment {
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     String restaurantId = currentUser.getUid();
+    String Name, ImageURL;
+    boolean restaurantIsActive;
     DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants").child(restaurantId);
     ImageButton imageButtonMenu, imageButtonInfo, imageButtonStatistics;
     private ImageView restaurantAvatar;
@@ -172,9 +174,9 @@ public class RestaurantManagerFragment extends Fragment {
         restaurantsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String Name = snapshot.child("name").getValue(String.class);
-                String ImageURL = snapshot.child("avatar_path").getValue(String.class);
-                boolean restaurantIsActive = snapshot.child("active").getValue(Boolean.class);
+                Name = snapshot.child("name").getValue(String.class);
+                ImageURL = snapshot.child("avatar_path").getValue(String.class);
+                restaurantIsActive = snapshot.child("active").getValue(Boolean.class);
                 restaurantName.setText(Name);
                 Glide.with(getActivity()).load(ImageURL).into(restaurantAvatar);
                 handleActiveRestaurant(restaurantIsActive);
@@ -200,5 +202,25 @@ public class RestaurantManagerFragment extends Fragment {
             textViewStateAcitve.setTextColor(Color.parseColor("#FF1744"));
         }
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        restaurantId = currentUser.getUid();
+        restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants").child(restaurantId);
+        restaurantsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Name = snapshot.child("name").getValue(String.class);
+                ImageURL = snapshot.child("avatar_path").getValue(String.class);
+                restaurantIsActive = snapshot.child("active").getValue(Boolean.class);
+                restaurantName.setText(Name);
+                Glide.with(getActivity()).load(ImageURL).into(restaurantAvatar);
+                handleActiveRestaurant(restaurantIsActive);
+                switchActiveRestaurant.setChecked(restaurantIsActive);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
 }
