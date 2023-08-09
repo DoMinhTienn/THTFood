@@ -52,7 +52,7 @@
 
 
     <FrameLayout
-        android:id="@+id/frameLayout7"
+        android:id="@+id/frameLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -61,7 +61,7 @@
         android:layout_marginEnd="2dp"
         android:background="@drawable/shape_statistics"
         android:padding="10dp"
-        app:layout_constraintEnd_toStartOf="@+id/frameLayout8"
+        app:layout_constraintEnd_toStartOf="@+id/frameLayout1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/chart">
 
@@ -96,7 +96,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/frameLayout8"
+        android:id="@+id/frameLayout1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -106,7 +106,7 @@
         android:background="@drawable/shape_statistics"
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/frameLayout7"
+        app:layout_constraintStart_toEndOf="@+id/frameLayout"
         app:layout_constraintTop_toBottomOf="@id/chart">
 
         <LinearLayout
