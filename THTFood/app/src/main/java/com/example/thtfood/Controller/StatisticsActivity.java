@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.thtfood.R;
@@ -22,6 +24,7 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -49,20 +53,24 @@ public class StatisticsActivity extends AppCompatActivity {
     private TextView textViewTotal;
     private TextView textViewPercentOrder;
     private StatisticsAdapter statisticsAdapter;
+    double totalOrder;
+    double totalPrice;
+
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     String restaurantId = currentUser.getUid();
     DatabaseReference ordersRef = FirebaseDatabase.getInstance().getReference().child("orders").child(restaurantId);
     List<String> title = new ArrayList<>();
     private String key;
-    private int currentMonthOrderCount = 0;
-    private int previousMonthOrderCount = 0;
+    private FrameLayout frameLayout, frameLayout1;
+    private int currentMonthOrderCount;
+    private int previousMonthOrderCount;
     HashMap<String, Double> dailyTotalOrders = new HashMap<>();
     HashMap<String, Double> previousMonthData = new HashMap<>();
     LocalDate date = LocalDate.now();
     List<BarEntry> barEntryList = new ArrayList<>();
     private int selectedPosition = 0;
-
+    NumberFormat vndFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +81,8 @@ public class StatisticsActivity extends AppCompatActivity {
         textViewCountOrder = findViewById(R.id.textViewCountOrder);
         textViewTotal = findViewById(R.id.textViewTotal);
         textViewPercentOrder = findViewById(R.id.textViewPercentOrder);
+        frameLayout = findViewById(R.id.frameLayout);
+        frameLayout1 = findViewById(R.id.frameLayout1);
         List<String> statisticItem = new ArrayList<>();
         statisticItem.add("Tháng này");
         statisticItem.add("Tháng");
@@ -101,6 +111,10 @@ public class StatisticsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    currentMonthOrderCount = 0;
+                    previousMonthOrderCount = 0;
+                    totalPrice = 0;
+
                     for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
                         String orderDate = orderSnapshot.child("orderDate").getValue(String.class);
                         LocalDate currentDate = LocalDate.parse(orderDate, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm", Locale.getDefault()));
@@ -166,10 +180,6 @@ public class StatisticsActivity extends AppCompatActivity {
     private void handleDisplay() {
         barEntryList.clear();
         title.clear();
-        SpannableStringBuilder builder = new SpannableStringBuilder();
-        SpannableString spannablePreviousCount;
-        double totalOrder;
-        double totalMonth = 0;
 
         List<Map.Entry<String, Double>> sortedEntries = new ArrayList<>(dailyTotalOrders.entrySet());
         Collections.sort(sortedEntries, new Comparator<Map.Entry<String, Double>>() {
@@ -183,11 +193,47 @@ public class StatisticsActivity extends AppCompatActivity {
         for (Map.Entry<String, Double> entry : sortedEntries) {
             String key = entry.getKey();
             double total = entry.getValue();
-            totalMonth += total;
+            totalPrice += total;
             barEntryList.add(new BarEntry(i++, (float) total));
             title.add(key);
         }
 
+        if(selectedPosition == 0){
+            frameLayout.setVisibility(View.VISIBLE);
+            frameLayout1.setVisibility(View.VISIBLE);
+            handlStatistics();
+        }
+        else{
+            frameLayout.setVisibility(View.GONE);
+            frameLayout1.setVisibility(View.GONE);
+        }
+
+        BarDataSet barDataSet = new BarDataSet(barEntryList, "");
+        BarData barData = new BarData(barDataSet);
+        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        barDataSet.setValueTextSize(12f);
+        barDataSet.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return vndFormat.format(value);
+            }
+        });
+        barChart.setData(barData);
+        barChart.invalidate();
+        barChart.getDescription().setEnabled(false);
+        barChart.getXAxis().setValueFormatter(new CustomValueFormatter(title));
+        barChart.getXAxis().setGranularity(1f);
+        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        barChart.getAxisRight().setEnabled(false);
+        barChart.getAxisLeft().setEnabled(false);
+        barChart.getAxisLeft().setDrawGridLines(false);
+        barChart.getXAxis().setDrawGridLines(false);
+        barChart.getLegend().setEnabled(false);
+    }
+
+    private void handlStatistics(){
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        SpannableString spannablePreviousCount;
         if(previousMonthOrderCount == 0){
             totalOrder = currentMonthOrderCount * 100;
         }
@@ -213,21 +259,7 @@ public class StatisticsActivity extends AppCompatActivity {
         textViewCountOrder.setText(String.valueOf(currentMonthOrderCount));
         textViewPercentOrder.setText(builder);
 
-        textViewTotal.setText(String.valueOf(totalMonth));
-
-
-        BarDataSet barDataSet = new BarDataSet(barEntryList, "");
-        BarData barData = new BarData(barDataSet);
-        barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-        barDataSet.setValueTextSize(12f);
-        barChart.setData(barData);
-        barChart.invalidate();
-        barChart.getDescription().setEnabled(false);
-        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(title));
-        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        barChart.getAxisRight().setEnabled(false);
-        barChart.getXAxis().setDrawGridLines(false);
-        barChart.getLegend().setEnabled(false);
+        textViewTotal.setText(String.valueOf(vndFormat.format(totalPrice)));
     }
 
 }
