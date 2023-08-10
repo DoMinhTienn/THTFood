@@ -1,11 +1,5 @@
 package com.example.thtfood.Controller;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,14 +10,18 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.thtfood.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,10 +50,11 @@ public class StatisticsActivity extends AppCompatActivity {
     private TextView textViewCountOrder;
     private TextView textViewTotal;
     private TextView textViewPercentOrder;
+    private TextView textViewPercentTotal;
     private StatisticsAdapter statisticsAdapter;
     double totalOrder;
     double totalPrice;
-
+    double totalPricePreviousMonth;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     String restaurantId = currentUser.getUid();
@@ -71,6 +70,7 @@ public class StatisticsActivity extends AppCompatActivity {
     List<BarEntry> barEntryList = new ArrayList<>();
     private int selectedPosition = 0;
     NumberFormat vndFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +81,7 @@ public class StatisticsActivity extends AppCompatActivity {
         textViewCountOrder = findViewById(R.id.textViewCountOrder);
         textViewTotal = findViewById(R.id.textViewTotal);
         textViewPercentOrder = findViewById(R.id.textViewPercentOrder);
+        textViewPercentTotal = findViewById(R.id.textViewPercentTotal);
         frameLayout = findViewById(R.id.frameLayout);
         frameLayout1 = findViewById(R.id.frameLayout1);
         List<String> statisticItem = new ArrayList<>();
@@ -114,6 +115,7 @@ public class StatisticsActivity extends AppCompatActivity {
                     currentMonthOrderCount = 0;
                     previousMonthOrderCount = 0;
                     totalPrice = 0;
+                    totalPricePreviousMonth = 0;
 
                     for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
                         String orderDate = orderSnapshot.child("orderDate").getValue(String.class);
@@ -197,13 +199,16 @@ public class StatisticsActivity extends AppCompatActivity {
             barEntryList.add(new BarEntry(i++, (float) total));
             title.add(key);
         }
+        for (Map.Entry<String, Double> entry : previousMonthData.entrySet()) {
+            double total = entry.getValue();
+            totalPricePreviousMonth += total;
+        }
 
-        if(selectedPosition == 0){
+        if (selectedPosition == 0) {
             frameLayout.setVisibility(View.VISIBLE);
             frameLayout1.setVisibility(View.VISIBLE);
             handlStatistics();
-        }
-        else{
+        } else {
             frameLayout.setVisibility(View.GONE);
             frameLayout1.setVisibility(View.GONE);
         }
@@ -231,19 +236,21 @@ public class StatisticsActivity extends AppCompatActivity {
         barChart.getLegend().setEnabled(false);
     }
 
-    private void handlStatistics(){
+    private void handlStatistics() {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         SpannableString spannablePreviousCount;
-        if(previousMonthOrderCount == 0){
+
+        SpannableStringBuilder builder2 = new SpannableStringBuilder();
+        SpannableString spannablePreviousTotal;
+        double percentTotal;
+
+        if (previousMonthOrderCount == 0) {
             totalOrder = currentMonthOrderCount * 100;
+        } else {
+            totalOrder = Math.round(Math.abs((double) (currentMonthOrderCount - previousMonthOrderCount) / previousMonthOrderCount) * 10000.0) / 100.0;
         }
-        else{
-            totalOrder = Math.round(Math.abs((double)(currentMonthOrderCount - previousMonthOrderCount) / previousMonthOrderCount) * 10000.0) / 100.0;
-        }
 
-
-
-        if(currentMonthOrderCount >= previousMonthOrderCount){
+        if (currentMonthOrderCount >= previousMonthOrderCount) {
             String arrow = "\u2191";
             spannablePreviousCount = new SpannableString(arrow + String.valueOf(totalOrder) + "%");
             spannablePreviousCount.setSpan(new ForegroundColorSpan(Color.parseColor("#006400")), 0, spannablePreviousCount.length(), 0);
@@ -252,14 +259,39 @@ public class StatisticsActivity extends AppCompatActivity {
             spannablePreviousCount = new SpannableString(arrow + String.valueOf(totalOrder) + "%");
             spannablePreviousCount.setSpan(new ForegroundColorSpan(Color.parseColor("#8B0000")), 0, spannablePreviousCount.length(), 0);
         }
-
         builder.append(spannablePreviousCount);
         builder.append(" so với tháng trước");
 
         textViewCountOrder.setText(String.valueOf(currentMonthOrderCount));
         textViewPercentOrder.setText(builder);
 
+
+
+        if(totalPricePreviousMonth == 0){
+            percentTotal = 100;
+
+
+
+
+        } else{
+            percentTotal = Math.round(Math.abs((double) (totalPrice - totalPricePreviousMonth) / totalPricePreviousMonth) * 10000.0) / 100.0;
+        }
+
+        if (totalPrice >= totalPricePreviousMonth) {
+            String arrow = "\u2191";
+            spannablePreviousTotal = new SpannableString(arrow + String.valueOf(percentTotal) + "%");
+            spannablePreviousTotal.setSpan(new ForegroundColorSpan(Color.parseColor("#006400")), 0, spannablePreviousTotal.length(), 0);
+        } else {
+            String arrow = "\u2193";
+            spannablePreviousTotal = new SpannableString(arrow + String.valueOf(percentTotal) + "%");
+            spannablePreviousTotal.setSpan(new ForegroundColorSpan(Color.parseColor("#8B0000")), 0, spannablePreviousTotal.length(), 0);
+        }
+        builder2.append(spannablePreviousTotal);
+        builder2.append(" so với tháng trước");
+        textViewPercentTotal.setText(builder2);
         textViewTotal.setText(String.valueOf(vndFormat.format(totalPrice)));
+
+
     }
 
 }
