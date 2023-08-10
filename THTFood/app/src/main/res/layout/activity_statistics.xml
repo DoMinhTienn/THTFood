@@ -131,7 +131,7 @@
                 android:textSize="22sp" />
 
             <TextView
-                android:id="@+id/textView22"
+                android:id="@+id/textViewPercentTotal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="G 19% so với tháng trước" />

@@ -77,8 +77,7 @@ public class InfoRestaurantActivity extends AppCompatActivity {
     ArrayAdapter<String> adapterCity, adapterDistrict, adapterWard;
     private StorageReference storageRef;
     private Uri imageUri;
-    private EditText etNumber, etStreet,etNameRestaurant;
-
+    private EditText etNumber, etStreet, etNameRestaurant;
     private String ward, district, city;
     private AutoCompleteTextView autoCompleteWard, autoCompleteDistrict, autoCompleteCity;
     String avatarPath;
@@ -99,7 +98,8 @@ public class InfoRestaurantActivity extends AppCompatActivity {
         autoCompleteDistrict = findViewById(R.id.dropdown_district);
         autoCompleteCity = findViewById(R.id.dropdown_city);
 
-        btnChooseImage = findViewById(R.id.btnChooseImage);;
+        btnChooseImage = findViewById(R.id.btnChooseImage);
+        ;
 
         storageRef = FirebaseStorage.getInstance().getReference();
         btnConfirm = findViewById(R.id.btnConfirm);
@@ -153,7 +153,7 @@ public class InfoRestaurantActivity extends AppCompatActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadImageToStorage(uid);
+                onSaveRestaurantInfo();
             }
         });
         toggleButtonEditData.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -186,13 +186,14 @@ public class InfoRestaurantActivity extends AppCompatActivity {
                     autoCompleteCity.setHint(restaurant.getAddress().getCity());
                     autoCompleteDistrict.setHint(restaurant.getAddress().getDistrict());
                     autoCompleteWard.setHint(restaurant.getAddress().getWard());
-
+                    avatarPath = restaurant.getAvatar_path();
                     Glide.with(InfoRestaurantActivity.this).load(restaurant.getAvatar_path()).apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).into(restaurantImage);
 
                     // Hiển thị nút "Chọn ảnh"
                     btnChooseImage.setVisibility(View.VISIBLE);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Xử lý khi có lỗi truy vấn dữ liệu
@@ -200,8 +201,9 @@ public class InfoRestaurantActivity extends AppCompatActivity {
             }
         });
     }
-    private void loadData(){
-        try{
+
+    private void loadData() {
+        try {
             InputStream inputStream = getAssets().open("country.json");
             int size = inputStream.available();
             byte[] buffer = new byte[size];
@@ -234,7 +236,7 @@ public class InfoRestaurantActivity extends AppCompatActivity {
                 }
                 districtMap.put(cityName, districtsList);
             }
-        } catch (IOException | JSONException e){
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
     }
@@ -270,7 +272,6 @@ public class InfoRestaurantActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_GET && resultCode == Activity.RESULT_OK) {
             if (data != null && data.getData() != null) {
-
                 imageUri = data.getData();
                 // Load hình ảnh đã chọn lên ImageView
                 Glide.with(this).load(imageUri).apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).into(restaurantImage);
@@ -283,17 +284,10 @@ public class InfoRestaurantActivity extends AppCompatActivity {
 
     public void uploadImageToStorage(final String restaurantId) {
         if (imageUri != null) {
-            // Trích xuất đuôi file từ Uri của ảnh
             ContentResolver contentResolver = getContentResolver();
             MimeTypeMap mime = MimeTypeMap.getSingleton();
             String fileExtension = mime.getExtensionFromMimeType(contentResolver.getType(imageUri));
 
-            // Kiểm tra xem có đuôi file hay không, nếu không thì mặc định là jpg
-            if (fileExtension == null || fileExtension.isEmpty()) {
-                fileExtension = "jpg";
-            }
-
-            // Tạo đường dẫn trong Firebase Storage với đuôi file tương ứng
             StorageReference storageReference = FirebaseStorage.getInstance().getReference()
                     .child("restaurant_avatars")
                     .child(restaurantId + "." + fileExtension);
@@ -302,15 +296,11 @@ public class InfoRestaurantActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                     if (task.isSuccessful()) {
-                        // Tải ảnh lên Storage thành công, lấy đường dẫn của ảnh
                         task.getResult().getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                // Lấy đường dẫn của ảnh từ Storage
                                 avatarPath = uri.toString();
                                 onSaveRestaurantInfo();
-                                // Cập nhật đường dẫn ảnh vào nhà hàng và lưu lại vào Realtime Database
-
                             }
                         });
                     }
@@ -318,6 +308,7 @@ public class InfoRestaurantActivity extends AppCompatActivity {
             });
         }
     }
+
     private void enableEdit() {
         etNameRestaurant.setEnabled(true);
         etNumber.setEnabled(true);
@@ -329,6 +320,7 @@ public class InfoRestaurantActivity extends AppCompatActivity {
         btnConfirm.setEnabled(true);
         btnConfirm.setBackgroundResource(R.drawable.button_background);
     }
+
     private void disableEdit() {
         etNameRestaurant.setEnabled(false);
         etNumber.setEnabled(false);
@@ -340,8 +332,9 @@ public class InfoRestaurantActivity extends AppCompatActivity {
         btnConfirm.setEnabled(false);
         btnConfirm.setBackgroundResource(R.drawable.button_background_opacity);
     }
-    public void onSaveRestaurantInfo() {
 
+    public void onSaveRestaurantInfo() {
+        uploadImageToStorage(uid);
         String name = etNameRestaurant.getText().toString();
         String number = etNumber.getText().toString();
         String street = etStreet.getText().toString();
