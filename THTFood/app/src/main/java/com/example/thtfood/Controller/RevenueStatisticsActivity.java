@@ -44,14 +44,14 @@ import java.util.Locale;
 import java.util.Map;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class StatisticsActivity extends AppCompatActivity {
+public class RevenueStatisticsActivity extends AppCompatActivity {
     BarChart barChart;
     private RecyclerView recyclerViewMenu;
     private TextView textViewCountOrder;
     private TextView textViewTotal;
     private TextView textViewPercentOrder;
     private TextView textViewPercentTotal;
-    private StatisticsAdapter statisticsAdapter;
+    private RevenueStatisticsAdapter statisticsAdapter;
     double totalOrder;
     double totalPrice;
     double totalPricePreviousMonth;
@@ -74,7 +74,7 @@ public class StatisticsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_statistics);
+        setContentView(R.layout.activity_revenue_statistics);
 
         barChart = findViewById(R.id.chart);
         recyclerViewMenu = findViewById(R.id.recyclerViewMenu);
@@ -89,13 +89,13 @@ public class StatisticsActivity extends AppCompatActivity {
         statisticItem.add("Tháng");
         statisticItem.add("Năm");
 
-        statisticsAdapter = new StatisticsAdapter(statisticItem);
+        statisticsAdapter = new RevenueStatisticsAdapter(statisticItem);
 
         recyclerViewMenu.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerViewMenu.setAdapter(statisticsAdapter);
         handleData(selectedPosition);
 
-        statisticsAdapter.setOnItemClickListener(new StatisticsAdapter.OnItemClickListener() {
+        statisticsAdapter.setOnItemClickListener(new RevenueStatisticsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 selectedPosition = position;

@@ -13,7 +13,7 @@ import com.example.thtfood.R;
 
 import java.util.List;
 
-public class StatisticsAdapter extends RecyclerView.Adapter<StatisticsAdapter.ViewHolder> {
+public class RevenueStatisticsAdapter extends RecyclerView.Adapter<RevenueStatisticsAdapter.ViewHolder> {
     private List<String> statisticItems;
     private int selectedPosition;
     private OnItemClickListener clickListener;
@@ -26,7 +26,7 @@ public class StatisticsAdapter extends RecyclerView.Adapter<StatisticsAdapter.Vi
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.clickListener = listener;
     }
-    public StatisticsAdapter(List<String> statisticItems) {
+    public RevenueStatisticsAdapter(List<String> statisticItems) {
         this.statisticItems = statisticItems;
     }
     @NonNull
