@@ -112,7 +112,7 @@ public class RestaurantManagerFragment extends Fragment {
         imageButtonStatistics.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), RevenueStatisticsActivity.class));
+                startActivity(new Intent(getActivity(), StatisticsMainActivity.class));
             }
         });
         switchActiveRestaurant.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

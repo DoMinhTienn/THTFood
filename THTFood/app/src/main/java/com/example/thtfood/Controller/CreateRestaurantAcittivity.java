@@ -53,7 +53,6 @@ public class CreateRestaurantAcittivity extends AppCompatActivity {
     private Map<String, List<String>> districtMap = new HashMap<>();
     private Map<String, List<String>> wardMap = new HashMap<>();
     private List<String> citiesList = new ArrayList<>();
-    AutoCompleteTextView dropdownCity, dropdownDistrict, dropdownWard;
     ArrayAdapter<String> adapterCity, adapterDistrict, adapterWard;
     private StorageReference storageRef;
     private Uri imageUri;
@@ -88,11 +87,10 @@ public class CreateRestaurantAcittivity extends AppCompatActivity {
             }
         });
 
-        dropdownCity = findViewById(R.id.dropdown_city);
         adapterCity= new ArrayAdapter<>(this, R.layout.list, citiesList);
-        dropdownCity.setAdapter(adapterCity);
+        autoCompleteCity.setAdapter(adapterCity);
 
-        dropdownCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        autoCompleteCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedCity = parent.getItemAtPosition(position).toString();
@@ -101,11 +99,11 @@ public class CreateRestaurantAcittivity extends AppCompatActivity {
             }
         });
 
-        dropdownDistrict = findViewById(R.id.dropdown_district);
+        autoCompleteDistrict = findViewById(R.id.dropdown_district);
         adapterDistrict = new ArrayAdapter<>(this, R.layout.list);
-        dropdownDistrict.setAdapter(adapterDistrict);
+        autoCompleteDistrict.setAdapter(adapterDistrict);
 
-        dropdownDistrict.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        autoCompleteDistrict.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedDistrict = parent.getItemAtPosition(position).toString();
@@ -113,10 +111,9 @@ public class CreateRestaurantAcittivity extends AppCompatActivity {
 
             }
         });
-
-        dropdownWard = findViewById(R.id.dropdown_ward);
+        
         adapterWard = new ArrayAdapter<>(this, R.layout.list);
-        dropdownWard.setAdapter(adapterWard);
+        autoCompleteWard.setAdapter(adapterWard);
 
         btnChooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
