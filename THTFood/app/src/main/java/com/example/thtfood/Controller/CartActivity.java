@@ -169,6 +169,11 @@ public class CartActivity extends AppCompatActivity {
                                             cartViewModel.saveCartItemsToSharedPreferences(CartActivity.this);
                                             cartAdapter.updateCart(new ArrayList<>());
                                             totalPriceTextView.setText("Tổng tiền: 0 VND");
+                                            saveCart.setEnabled(false);
+                                            Intent cartIntent = new Intent( CartActivity.this, RatingActivity.class);
+                                            cartIntent.putExtra("restaurantKey", restaurantKey);
+                                            cartIntent.putExtra("billId", BillId);
+                                            startActivity(cartIntent);
                                         } else {
                                             Toast.makeText(CartActivity.this, "Lỗi khi lưu đơn hàng", Toast.LENGTH_SHORT).show();
                                         }
