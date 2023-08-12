@@ -38,9 +38,9 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         holder.usernameTextView.setText(review.getUsername()); // Thay thế bằng dữ liệu người dùng thực tế
         holder.ratingBar.setRating(review.getRating());
         holder.commentTextView.setText(review.getComment()); // Thay thế bằng dữ liệu bình luận thực tế
-        Glide.with(holder.userImageView.getContext())
-                .load(review.getImage())
-                .into(holder.userImageView);
+//        Glide.with(holder.userImageView.getContext())
+//                .load(review.getImage())
+//                .into(holder.userImageView);
     }
 
     @Override

@@ -170,7 +170,6 @@ public class CartActivity extends AppCompatActivity {
                                             cartAdapter.updateCart(new ArrayList<>());
                                             totalPriceTextView.setText("Tổng tiền: 0 VND");
                                             saveCart.setEnabled(false);
-                                            finish();
                                             Intent cartIntent = new Intent( CartActivity.this, RatingActivity.class);
                                             cartIntent.putExtra("restaurantKey", restaurantKey);
                                             cartIntent.putExtra("billId", BillId);
@@ -198,6 +197,5 @@ public class CartActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
         return sdf.format(new Date());
     }
-
 }
 

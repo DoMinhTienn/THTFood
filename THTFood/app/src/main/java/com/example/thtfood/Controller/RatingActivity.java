@@ -45,26 +45,18 @@ public class RatingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 float rating = ratingBar.getRating();
                 String comment = commentEditText.getText().toString();
-                String userInput = commentEditText.getText().toString().trim();
-                if (userInput.isEmpty()) {
-                    // Hiển thị thông báo lỗi khi TextView/EditText trống
-                    commentEditText.setError("Hãy nhập bình luận.");
-                }else {
-                    // Lưu đánh giá và bình luận vào cơ sở dữ liệu hoặc xử lý theo nhu cầu của bạn.
-                    DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
-                    DatabaseReference billRef = databaseRef.child("orders").child(restaurantKey).child(billId);
 
-                    HashMap<String, Object> reviewData = new HashMap<>();
-                    reviewData.put("rating", rating);
-                    reviewData.put("comment", comment);
-                    billRef.child("reviews").setValue(reviewData);
+                // Lưu đánh giá và bình luận vào cơ sở dữ liệu hoặc xử lý theo nhu cầu của bạn.
+                DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+                DatabaseReference billRef = databaseRef.child("orders").child(restaurantKey). child(billId);
 
-                    Toast.makeText(RatingActivity.this, "Đánh giá thành công", Toast.LENGTH_SHORT).show();
-                    finish();
-                    Intent intents = new Intent(RatingActivity.this, ReviewsActivity.class);
-                    intents.putExtra("restaurantKey", restaurantKey);
-                    startActivity(intents);
-                }
+                HashMap<String, Object> reviewData = new HashMap<>();
+                reviewData.put("rating", rating);
+                reviewData.put("comment", comment);
+                billRef.child("reviews").setValue(reviewData);
+
+                Toast.makeText(RatingActivity.this, "Đánh giá thành công", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
         imageButtonQuit = findViewById(R.id.imageButtonQuit);
