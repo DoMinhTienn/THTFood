@@ -78,6 +78,15 @@ public class RestaurantActivity extends AppCompatActivity {
                 finish();
             }
         });
+        TextView textView = findViewById(R.id.reviews); // Thay thế bằng ID thực tế của TextView
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intents = new Intent(RestaurantActivity.this, ReviewsActivity.class);
+                intents.putExtra("restaurantKey", restaurantKey);
+                startActivity(intents);
+            }
+        });
         if(cartViewModel.getResId() == null || !cartViewModel.getResId().equals(restaurantKey))
         {
 
