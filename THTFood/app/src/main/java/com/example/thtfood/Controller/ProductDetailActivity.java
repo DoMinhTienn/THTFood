@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.thtfood.Model.CartItem;
 
 import com.example.thtfood.R;
@@ -32,6 +33,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private String productName;
     private  double productPrice;
     private String description;
+    private String imagefoods;
     private String restaurantKey;
     private CartViewModel cartViewModel;
     private ImageButton imageButtonQuit;
@@ -46,6 +48,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         TextView textViewProductName = findViewById(R.id.productName);
         TextView textViewProductPrice = findViewById(R.id.productPrice);
+        ImageView imageFood = findViewById(R.id.productImage);
         sizecart = findViewById(R.id.sizecart);
         TextView textdes  = findViewById(R.id.textdes);
         cartViewModel.getCartItemsLiveData().observe(this, new Observer<List<CartItem>>() {
@@ -70,9 +73,11 @@ public class ProductDetailActivity extends AppCompatActivity {
             productName = intent.getStringExtra("product_name");
             productPrice = intent.getDoubleExtra("product_price", 0);
             description =  intent.getStringExtra("descriptionmenu");
+            imagefoods = intent.getStringExtra("image");
             textViewProductName.setText(productName);
             textViewProductPrice.setText(String.valueOf(vndFormat.format(productPrice)));
             textdes.setText(description);
+            Glide.with(this).load(imagefoods).into(imageFood);
         }
 
         Button decreaseQuantityBtn = findViewById(R.id.decreaseQuantityBtn);
@@ -101,9 +106,10 @@ public class ProductDetailActivity extends AppCompatActivity {
         addToCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CartItem cartItem = new CartItem(productId, productName, quantity, productPrice);
+                CartItem cartItem = new CartItem(productId, productName,imagefoods, quantity, productPrice);
                 cartViewModel.addToCart(cartItem);
                 cartViewModel.saveCartItemsToSharedPreferences(ProductDetailActivity.this);
+                quantityTextView.setText("1");
                 // Quan sát sự thay đổi trong LiveData và log danh sách sản phẩm khi có sự thay đổi
                 Toast.makeText(ProductDetailActivity.this, "thêm thành công", Toast.LENGTH_SHORT).show();
             }
@@ -136,6 +142,13 @@ public class ProductDetailActivity extends AppCompatActivity {
         // Sử dụng cartItems để cập nhật số lượng giỏ hàng trên giao diện
         if (cartItems != null) {
             int cartItemCount = cartItems.size();
+            if(cartItemCount == 0){
+                sizecart.setVisibility(View.INVISIBLE);
+            }
+            else
+            {
+                sizecart.setVisibility(View.VISIBLE);
+            }
             sizecart.setText(String.valueOf(cartItemCount));
         }
     }

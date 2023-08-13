@@ -81,6 +81,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:background="@drawable/round_back_red_10"
+                app:backgroundTint="@null"
                 android:layout_marginTop="16dp"
                 android:text="Đánh giá" />
 
