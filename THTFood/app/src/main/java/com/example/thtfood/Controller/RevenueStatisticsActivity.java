@@ -8,6 +8,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,14 +45,15 @@ import java.util.Locale;
 import java.util.Map;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class StatisticsActivity extends AppCompatActivity {
+public class RevenueStatisticsActivity extends AppCompatActivity {
+    private ImageButton imageButtonQuit;
     BarChart barChart;
     private RecyclerView recyclerViewMenu;
     private TextView textViewCountOrder;
     private TextView textViewTotal;
     private TextView textViewPercentOrder;
     private TextView textViewPercentTotal;
-    private StatisticsAdapter statisticsAdapter;
+    private RevenueStatisticsAdapter statisticsAdapter;
     double totalOrder;
     double totalPrice;
     double totalPricePreviousMonth;
@@ -74,7 +76,7 @@ public class StatisticsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_statistics);
+        setContentView(R.layout.activity_revenue_statistics);
 
         barChart = findViewById(R.id.chart);
         recyclerViewMenu = findViewById(R.id.recyclerViewMenu);
@@ -84,18 +86,24 @@ public class StatisticsActivity extends AppCompatActivity {
         textViewPercentTotal = findViewById(R.id.textViewPercentTotal);
         frameLayout = findViewById(R.id.frameLayout);
         frameLayout1 = findViewById(R.id.frameLayout1);
+        imageButtonQuit = findViewById(R.id.imageButtonQuit);
         List<String> statisticItem = new ArrayList<>();
         statisticItem.add("Tháng này");
         statisticItem.add("Tháng");
         statisticItem.add("Năm");
 
-        statisticsAdapter = new StatisticsAdapter(statisticItem);
-
+        statisticsAdapter = new RevenueStatisticsAdapter(statisticItem);
+        imageButtonQuit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         recyclerViewMenu.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerViewMenu.setAdapter(statisticsAdapter);
         handleData(selectedPosition);
 
-        statisticsAdapter.setOnItemClickListener(new StatisticsAdapter.OnItemClickListener() {
+        statisticsAdapter.setOnItemClickListener(new RevenueStatisticsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 selectedPosition = position;
