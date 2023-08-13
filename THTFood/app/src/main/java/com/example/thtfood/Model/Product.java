@@ -7,7 +7,6 @@ public class Product {
     private String description;
     private double price;
     private boolean active;
-    private int quantity;
     public Product() {
     }
 
@@ -27,11 +26,7 @@ public class Product {
         this.active = active;
     }
 
-    public Product(String name, int quantity){
-        this.name = name;
-        this.quantity = quantity;
 
-    }
     public boolean isActive() {
         return active;
     }
@@ -64,14 +59,6 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 
     public String getDescription() {
