@@ -82,8 +82,9 @@ public class ReviewsActivity extends AppCompatActivity {
                                 }
 
                                 float averageRating = totalRating / totalReviews;
+                                double roundedNumber = Math.round(averageRating * 10.0) / 10.0;
                                 TextView averageRatingTextView = findViewById(R.id.textReview);
-                                averageRatingTextView.setText(("( " +averageRating +  " ★ và " +  totalReviews +  " nhận xét)"));
+                                averageRatingTextView.setText(("( " +roundedNumber +  " ★ và " +  totalReviews +  " nhận xét)"));
                                 adapter = new ReviewAdapter(reviewList);
                                 recyclerView.setAdapter(adapter);
                             }
