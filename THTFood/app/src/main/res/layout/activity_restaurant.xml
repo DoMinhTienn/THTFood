@@ -49,14 +49,14 @@
                 <TextView
                     android:id="@+id/sizecart"
                     android:layout_width="15dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginTop="0dp"
-                    android:background="@drawable/circle_bg"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="-12dp"
+                    android:layout_marginTop="-8dp"
+                    android:background="@drawable/bg_cart"
                     android:backgroundTint="#F40B0B"
                     android:text="5"
                     android:textAlignment="center"
-                    android:textColor="#F10F5A"
+                    android:textColor="#FDFCFD"
                     android:textSize="16dp"
                     android:textStyle="bold" />
 

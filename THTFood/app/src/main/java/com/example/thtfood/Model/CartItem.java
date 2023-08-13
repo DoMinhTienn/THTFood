@@ -3,12 +3,14 @@ package com.example.thtfood.Model;
 public class CartItem {
     private  String productId;
     private String productName;
+    private String image;
     private int quantity;
     private double productPrice;
 
-    public CartItem(String productId ,String productName, int quantity, double productPrice) {
+    public CartItem(String productId ,String productName,String image, int quantity, double productPrice) {
         this.productId = productId;
         this.productName = productName;
+        this.image = image;
         this.quantity = quantity;
         this.productPrice = productPrice;
     }
@@ -27,6 +29,13 @@ public class CartItem {
     }
     public double getProductPrice() {
         return productPrice;
+    }
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
 

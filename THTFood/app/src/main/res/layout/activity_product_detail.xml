@@ -53,14 +53,14 @@
                 <TextView
                     android:id="@+id/sizecart"
                     android:layout_width="15dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginTop="0dp"
-                    android:background="@drawable/circle_bg"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="-12dp"
+                    android:layout_marginTop="-8dp"
+                    android:background="@drawable/bg_cart"
                     android:backgroundTint="#F40B0B"
                     android:text="5"
                     android:textAlignment="center"
-                    android:textColor="#F10F5A"
+                    android:textColor="#FDFCFD"
                     android:textSize="16dp"
                     android:textStyle="bold" />
 
@@ -183,7 +183,8 @@
                     android:id="@+id/decreaseQuantityBtn"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
-                    android:background="@drawable/button_background"
+                    android:background="@drawable/round_back_red_10"
+                    app:backgroundTint="@null"
                     android:text="-"
                     android:textSize="25dp" />
 
@@ -200,7 +201,8 @@
                     android:id="@+id/increaseQuantityBtn"
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/button_background"
+                    android:background="@drawable/round_back_red_10"
+                    app:backgroundTint="@null"
                     android:text="+"
                     android:textSize="25dp" />
             </LinearLayout>
@@ -221,7 +223,8 @@
         android:layout_height="63dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp"
-        android:background="@drawable/button_background_opacity"
+        android:background="@drawable/round_back_red_10"
+        app:backgroundTint="@null"
         android:text="Thêm vào giỏ hàng"
         android:textSize="20sp" />
 

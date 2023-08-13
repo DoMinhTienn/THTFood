@@ -5,11 +5,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.thtfood.Model.CartItem;
 import com.example.thtfood.R;
 
@@ -49,7 +51,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.productNameTextView.setText(cartItem.getProductName());
         holder.quantityTextView.setText("Số lượng: " + String.valueOf(cartItem.getQuantity()));
         holder.priceTextView.setText("Giá: " + String.valueOf(vndFormat.format(cartItem.getProductPrice())));
-
+        Glide.with(holder.imageFood.getContext())
+                .load(cartItem.getImage())
+                .into(holder.imageFood);
         holder.removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,11 +74,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         TextView quantityTextView;
         TextView priceTextView;
         ImageButton removeButton;
+
+        ImageView imageFood;
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
             productNameTextView = itemView.findViewById(R.id.orderInfoTextView);
             quantityTextView = itemView.findViewById(R.id.quantityTextView);
             priceTextView = itemView.findViewById(R.id.priceTextView);
+            imageFood = itemView.findViewById(R.id.productImageView);
             removeButton = itemView.findViewById(R.id.removeButton);
         }
     }

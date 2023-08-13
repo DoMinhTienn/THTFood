@@ -140,6 +140,7 @@ public class RestaurantActivity extends AppCompatActivity {
                             intent.putExtra("product_name", product.getName());
                             intent.putExtra("product_price", product.getPrice());
                             intent.putExtra("descriptionmenu", product.getDescription());
+                            intent.putExtra("image", product.getImage());
                             startActivity(intent);
                         }
                     });
@@ -193,6 +194,13 @@ public class RestaurantActivity extends AppCompatActivity {
         // Sử dụng cartItems để cập nhật số lượng giỏ hàng trên giao diện
         if (cartItems != null) {
             int cartItemCount = cartItems.size();
+            if(cartItemCount == 0){
+                sizecart.setVisibility(View.INVISIBLE);
+            }
+            else
+            {
+                sizecart.setVisibility(View.VISIBLE);
+            }
             sizecart.setText(String.valueOf(cartItemCount));
         }
     }
