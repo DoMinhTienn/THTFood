@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
@@ -14,18 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.thtfood.Model.Order;
-import com.example.thtfood.Model.User;
-import com.example.thtfood.Model.UserManager;
 import com.example.thtfood.R;
-import com.google.android.play.core.integrity.v;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -49,6 +43,8 @@ public class RestaurantManagerFragment extends Fragment {
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     String restaurantId = currentUser.getUid();
+    String Name, ImageURL;
+    boolean restaurantIsActive;
     DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants").child(restaurantId);
     ImageButton imageButtonMenu, imageButtonInfo, imageButtonStatistics;
     private ImageView restaurantAvatar;
@@ -116,7 +112,7 @@ public class RestaurantManagerFragment extends Fragment {
         imageButtonStatistics.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), StatisticsActivity.class));
+                startActivity(new Intent(getActivity(), StatisticsMainActivity.class));
             }
         });
         switchActiveRestaurant.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -172,9 +168,9 @@ public class RestaurantManagerFragment extends Fragment {
         restaurantsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String Name = snapshot.child("name").getValue(String.class);
-                String ImageURL = snapshot.child("avatar_path").getValue(String.class);
-                boolean restaurantIsActive = snapshot.child("active").getValue(Boolean.class);
+                Name = snapshot.child("name").getValue(String.class);
+                ImageURL = snapshot.child("avatar_path").getValue(String.class);
+                restaurantIsActive = snapshot.child("active").getValue(Boolean.class);
                 restaurantName.setText(Name);
                 Glide.with(getActivity()).load(ImageURL).into(restaurantAvatar);
                 handleActiveRestaurant(restaurantIsActive);
@@ -200,5 +196,25 @@ public class RestaurantManagerFragment extends Fragment {
             textViewStateAcitve.setTextColor(Color.parseColor("#FF1744"));
         }
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        restaurantId = currentUser.getUid();
+        restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants").child(restaurantId);
+        restaurantsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Name = snapshot.child("name").getValue(String.class);
+                ImageURL = snapshot.child("avatar_path").getValue(String.class);
+                restaurantIsActive = snapshot.child("active").getValue(Boolean.class);
+                restaurantName.setText(Name);
+                Glide.with(getActivity()).load(ImageURL).into(restaurantAvatar);
+                handleActiveRestaurant(restaurantIsActive);
+                switchActiveRestaurant.setChecked(restaurantIsActive);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
 }

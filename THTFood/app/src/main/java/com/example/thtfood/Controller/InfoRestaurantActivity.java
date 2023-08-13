@@ -19,11 +19,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -64,11 +66,10 @@ public class InfoRestaurantActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     String uid = currentUser.getUid();
-    private String originalName, originalNumber, originalStreet, originalWard, originalDistrict, originalCity, originalAvatarPath;
     private ImageButton imageButtonQuit, btnChooseImage;
-    private TextView plusSign;
     private ImageView restaurantImage;
     private Button btnConfirm;
+    private ToggleButton toggleButtonEditData;
     private Map<String, List<String>> districtMap = new HashMap<>();
     private Map<String, List<String>> wardMap = new HashMap<>();
     private List<String> citiesList = new ArrayList<>();
@@ -76,17 +77,15 @@ public class InfoRestaurantActivity extends AppCompatActivity {
     ArrayAdapter<String> adapterCity, adapterDistrict, adapterWard;
     private StorageReference storageRef;
     private Uri imageUri;
-    private EditText etNumber, etStreet,etNameRestaurant;
-
+    private EditText etNumber, etStreet, etNameRestaurant;
     private String ward, district, city;
     private AutoCompleteTextView autoCompleteWard, autoCompleteDistrict, autoCompleteCity;
+    String avatarPath;
 
     @SuppressLint({"MissingInflatedId", "CutPasteId"})
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_restaurant);
-
-        loadData();
 
         imageButtonQuit = findViewById(R.id.imageButtonQuit);
         restaurantImage = findViewById(R.id.restaurantImage);
@@ -100,15 +99,26 @@ public class InfoRestaurantActivity extends AppCompatActivity {
         autoCompleteCity = findViewById(R.id.dropdown_city);
 
         btnChooseImage = findViewById(R.id.btnChooseImage);
-        plusSign = findViewById(R.id.plusSign);
+        ;
 
         storageRef = FirebaseStorage.getInstance().getReference();
         btnConfirm = findViewById(R.id.btnConfirm);
+        toggleButtonEditData = findViewById(R.id.toggleButtonEditData);
 
         dropdownCity = findViewById(R.id.dropdown_city);
-        adapterCity= new ArrayAdapter<>(this, R.layout.list, citiesList);
+        dropdownDistrict = findViewById(R.id.dropdown_district);
+        dropdownWard = findViewById(R.id.dropdown_ward);
+
+        adapterCity = new ArrayAdapter<>(InfoRestaurantActivity.this, R.layout.list, citiesList);
         dropdownCity.setAdapter(adapterCity);
 
+        adapterDistrict = new ArrayAdapter<>(InfoRestaurantActivity.this, R.layout.list);
+        dropdownDistrict.setAdapter(adapterDistrict);
+
+        adapterWard = new ArrayAdapter<>(InfoRestaurantActivity.this, R.layout.list);
+        dropdownWard.setAdapter(adapterWard);
+        disableEdit();
+        loadData();
         dropdownCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -116,10 +126,6 @@ public class InfoRestaurantActivity extends AppCompatActivity {
                 updateDistricts(selectedCity);
             }
         });
-
-        dropdownDistrict = findViewById(R.id.dropdown_district);
-        adapterDistrict = new ArrayAdapter<>(this, R.layout.list);
-        dropdownDistrict.setAdapter(adapterDistrict);
 
         dropdownDistrict.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -129,16 +135,6 @@ public class InfoRestaurantActivity extends AppCompatActivity {
             }
         });
 
-        dropdownWard = findViewById(R.id.dropdown_ward);
-        adapterWard = new ArrayAdapter<>(this, R.layout.list);
-        dropdownWard.setAdapter(adapterWard);
-
-        plusSign.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onChooseImageClick(v);
-            }
-        });
         btnChooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,6 +156,16 @@ public class InfoRestaurantActivity extends AppCompatActivity {
                 onSaveRestaurantInfo();
             }
         });
+        toggleButtonEditData.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    enableEdit();
+                } else {
+                    disableEdit();
+                }
+            }
+        });
         // Lấy dữ liệu từ Firebase và hiển thị lên các trường
         DatabaseReference restaurantRef = FirebaseDatabase.getInstance().getReference()
                 .child("restaurants")
@@ -170,57 +176,24 @@ public class InfoRestaurantActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // Kiểm tra nếu nhà hàng có trong database
                 if (snapshot.exists()) {
-                    //Lấy dữ liệu từ snapshot và đổ vào các trường
+//                    //Lấy dữ liệu từ snapshot và đổ vào các trường
                     Restaurant restaurant = snapshot.getValue(Restaurant.class);
-                    dropdownWard = findViewById(R.id.dropdown_ward);
-                    adapterWard = new ArrayAdapter<>(InfoRestaurantActivity.this, R.layout.list);
-                    dropdownWard.setAdapter(adapterWard);
-
-                    dropdownDistrict = findViewById(R.id.dropdown_district);
-                    adapterDistrict = new ArrayAdapter<>(InfoRestaurantActivity.this, R.layout.list);
-                    dropdownDistrict.setAdapter(adapterDistrict);
-
-                    dropdownCity = findViewById(R.id.dropdown_city);
-                    adapterCity = new ArrayAdapter<>(InfoRestaurantActivity.this, R.layout.list, citiesList);
-                    dropdownCity.setAdapter(adapterCity);
-
                     etNameRestaurant.setText(restaurant.getName());
                     etNumber.setText(restaurant.getAddress().getNumber());
                     etStreet.setText(restaurant.getAddress().getStreet());
 
-                    autoCompleteCity.setText(restaurant.getAddress().getCity());
-                    autoCompleteDistrict.setText(restaurant.getAddress().getDistrict());
-                    autoCompleteWard.setText(restaurant.getAddress().getWard());
+                    // Đặt giá trị cho AutoCompleteTextView
+                    autoCompleteCity.setHint(restaurant.getAddress().getCity());
+                    autoCompleteDistrict.setHint(restaurant.getAddress().getDistrict());
+                    autoCompleteWard.setHint(restaurant.getAddress().getWard());
+                    avatarPath = restaurant.getAvatar_path();
+                    Glide.with(InfoRestaurantActivity.this).load(restaurant.getAvatar_path()).apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).into(restaurantImage);
 
-                    originalName = restaurant.getName();
-                    originalNumber = restaurant.getAddress().getNumber();
-                    originalStreet = restaurant.getAddress().getStreet();
-                    originalWard = restaurant.getAddress().getWard();
-                    originalDistrict = restaurant.getAddress().getDistrict();
-                    originalCity = restaurant.getAddress().getCity();
-                    originalAvatarPath = restaurant.getAvatar_path();
-
-                    // Cập nhật dữ liệu cho adapterDistrict
-                    List<String> districtsList = districtMap.get(restaurant.getAddress().getCity());
-                    if (districtsList != null) {
-                        adapterDistrict.clear();
-                        adapterDistrict.addAll(districtsList);
-                    }
-
-                    // Cập nhật dữ liệu cho adapterWard
-                    List<String> wardsList = wardMap.get(restaurant.getAddress().getDistrict());
-                    if (wardsList != null) {
-                        adapterWard.clear();
-                        adapterWard.addAll(wardsList);
-                    }
-
-                    Glide.with(InfoRestaurantActivity.this).load(originalAvatarPath).apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).into(restaurantImage);
-                    // Ẩn dấu '+' khi đã chọn hình ảnh
-                    plusSign.setVisibility(View.GONE);
-                    // Hiển thị nút "Lưu" thay vì nút "Chọn ảnh"
+                    // Hiển thị nút "Chọn ảnh"
                     btnChooseImage.setVisibility(View.VISIBLE);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Xử lý khi có lỗi truy vấn dữ liệu
@@ -228,8 +201,9 @@ public class InfoRestaurantActivity extends AppCompatActivity {
             }
         });
     }
-    private void loadData(){
-        try{
+
+    private void loadData() {
+        try {
             InputStream inputStream = getAssets().open("country.json");
             int size = inputStream.available();
             byte[] buffer = new byte[size];
@@ -262,7 +236,7 @@ public class InfoRestaurantActivity extends AppCompatActivity {
                 }
                 districtMap.put(cityName, districtsList);
             }
-        } catch (IOException | JSONException e){
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
     }
@@ -298,12 +272,10 @@ public class InfoRestaurantActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_GET && resultCode == Activity.RESULT_OK) {
             if (data != null && data.getData() != null) {
-
                 imageUri = data.getData();
                 // Load hình ảnh đã chọn lên ImageView
                 Glide.with(this).load(imageUri).apply(RequestOptions.bitmapTransform(new RoundedCorners(20))).into(restaurantImage);
-                // Ẩn dấu '+' khi đã chọn hình ảnh
-                plusSign.setVisibility(View.GONE);
+
                 // Hiển thị nút "Lưu" thay vì nút "Chọn ảnh"
                 btnChooseImage.setVisibility(View.VISIBLE);
             }
@@ -312,17 +284,10 @@ public class InfoRestaurantActivity extends AppCompatActivity {
 
     public void uploadImageToStorage(final String restaurantId) {
         if (imageUri != null) {
-            // Trích xuất đuôi file từ Uri của ảnh
             ContentResolver contentResolver = getContentResolver();
             MimeTypeMap mime = MimeTypeMap.getSingleton();
             String fileExtension = mime.getExtensionFromMimeType(contentResolver.getType(imageUri));
 
-            // Kiểm tra xem có đuôi file hay không, nếu không thì mặc định là jpg
-            if (fileExtension == null || fileExtension.isEmpty()) {
-                fileExtension = "jpg";
-            }
-
-            // Tạo đường dẫn trong Firebase Storage với đuôi file tương ứng
             StorageReference storageReference = FirebaseStorage.getInstance().getReference()
                     .child("restaurant_avatars")
                     .child(restaurantId + "." + fileExtension);
@@ -331,18 +296,11 @@ public class InfoRestaurantActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                     if (task.isSuccessful()) {
-                        // Tải ảnh lên Storage thành công, lấy đường dẫn của ảnh
                         task.getResult().getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                // Lấy đường dẫn của ảnh từ Storage
-                                String avatarPath = uri.toString();
-
-                                // Cập nhật đường dẫn ảnh vào nhà hàng và lưu lại vào Realtime Database
-                                DatabaseReference restaurantRef = FirebaseDatabase.getInstance().getReference()
-                                        .child("restaurants")
-                                        .child(restaurantId);
-                                restaurantRef.child("avatar_path").setValue(avatarPath);
+                                avatarPath = uri.toString();
+                                onSaveRestaurantInfo();
                             }
                         });
                     }
@@ -350,8 +308,33 @@ public class InfoRestaurantActivity extends AppCompatActivity {
             });
         }
     }
-    public void onSaveRestaurantInfo() {
 
+    private void enableEdit() {
+        etNameRestaurant.setEnabled(true);
+        etNumber.setEnabled(true);
+        etStreet.setEnabled(true);
+        autoCompleteWard.setEnabled(true);
+        autoCompleteDistrict.setEnabled(true);
+        autoCompleteCity.setEnabled(true);
+        btnChooseImage.setEnabled(true);
+        btnConfirm.setEnabled(true);
+        btnConfirm.setBackgroundResource(R.drawable.button_background);
+    }
+
+    private void disableEdit() {
+        etNameRestaurant.setEnabled(false);
+        etNumber.setEnabled(false);
+        etStreet.setEnabled(false);
+        autoCompleteWard.setEnabled(false);
+        autoCompleteDistrict.setEnabled(false);
+        autoCompleteCity.setEnabled(false);
+        btnChooseImage.setEnabled(false);
+        btnConfirm.setEnabled(false);
+        btnConfirm.setBackgroundResource(R.drawable.button_background_opacity);
+    }
+
+    public void onSaveRestaurantInfo() {
+        uploadImageToStorage(uid);
         String name = etNameRestaurant.getText().toString();
         String number = etNumber.getText().toString();
         String street = etStreet.getText().toString();
@@ -361,26 +344,16 @@ public class InfoRestaurantActivity extends AppCompatActivity {
         Address address = new Address(number, street, ward, district, city);
 
         // Update đối tượng Restaurant với thông tin đã lấy được
-        Restaurant restaurant = new Restaurant(name, "", address, true);
+        Restaurant restaurant = new Restaurant(name, avatarPath, address, true);
 
         // Tham chiếu đến node "restaurants" trong Firebase Realtime Database
         DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants").child(uid);
-        // Cập nhật các trường dữ liệu mới vào một Map
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("name", etNameRestaurant.getText().toString());
-        updates.put("address/number", etNumber.getText().toString());
-        updates.put("address/street", etStreet.getText().toString());
-        updates.put("address/ward", autoCompleteWard.getText().toString());
-        updates.put("address/district", autoCompleteDistrict.getText().toString());
-        updates.put("address/city", autoCompleteCity.getText().toString());
-        // Đặt giá trị dữ liệu của nhà hàng tại địa chỉ mới vừa tạo
         restaurantsRef.setValue(restaurant).addOnCompleteListener(new OnCompleteListener<Void>() {
 
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     // Lưu thông tin nhà hàng thành công, tiếp tục lưu ảnh vào Firebase Storage
-                    uploadImageToStorage(uid);
                     Toast.makeText(getApplicationContext(), "Cập nhật thành công", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {

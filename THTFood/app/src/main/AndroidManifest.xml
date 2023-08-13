@@ -19,10 +19,16 @@
             android:name=".Controller.RatingActivity"
             android:exported="false" />
         <activity
+            android:name=".Controller.ProductStatisticsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Controller.StatisticsMainActivity"
+            android:exported="false" />
+        <activity
             android:name=".Controller.InfoRestaurantActivity"
             android:exported="false" />
         <activity
-            android:name=".Controller.StatisticsActivity"
+            android:name=".Controller.RevenueStatisticsActivity"
             android:exported="false" />
         <activity
             android:name=".Controller.CartActivity"

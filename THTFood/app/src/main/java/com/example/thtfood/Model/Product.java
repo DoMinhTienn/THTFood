@@ -25,6 +25,8 @@ public class Product {
         this.description = description;
         this.active = active;
     }
+
+
     public boolean isActive() {
         return active;
     }
@@ -58,8 +60,6 @@ public class Product {
     public void setPrice(double price) {
         this.price = price;
     }
-
-
 
     public String getDescription() {
         return description;

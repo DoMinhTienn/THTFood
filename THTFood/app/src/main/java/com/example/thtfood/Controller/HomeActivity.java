@@ -1,6 +1,7 @@
 package com.example.thtfood.Controller;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -26,7 +27,14 @@ public class HomeActivity extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         if(user != null && "1".equals(user.getRole()) ){
-            replaceFragment(new RestaurantManagerFragment());
+            RestaurantHelper.checkRestaurant(isRestaurant -> {
+                // Xử lý kết quả trả về tùy thuộc vào giá trị của isRestaurant
+                if (isRestaurant) {
+                    replaceFragment(new RestaurantManagerFragment());
+                } else {
+                }
+            });
+
         }
         else {
             replaceFragment(new HomeFragment());
