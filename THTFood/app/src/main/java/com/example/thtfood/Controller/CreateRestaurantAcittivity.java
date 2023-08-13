@@ -58,6 +58,7 @@ public class CreateRestaurantAcittivity extends AppCompatActivity {
     private Uri imageUri;
     private EditText etNumber, etStreet,etNameRestaurant;
 
+    private String avatarPath;
     private String ward, district, city;
     private AutoCompleteTextView autoCompleteWard, autoCompleteDistrict, autoCompleteCity;
 
@@ -229,11 +230,6 @@ public class CreateRestaurantAcittivity extends AppCompatActivity {
             MimeTypeMap mime = MimeTypeMap.getSingleton();
             String fileExtension = mime.getExtensionFromMimeType(contentResolver.getType(imageUri));
 
-            // Kiểm tra xem có đuôi file hay không, nếu không thì mặc định là jpg
-            if (fileExtension == null || fileExtension.isEmpty()) {
-                fileExtension = "jpg";
-            }
-
             // Tạo đường dẫn trong Firebase Storage với đuôi file tương ứng
             StorageReference storageReference = FirebaseStorage.getInstance().getReference()
                     .child("restaurant_avatars")
@@ -248,7 +244,7 @@ public class CreateRestaurantAcittivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Uri uri) {
                                 // Lấy đường dẫn của ảnh từ Storage
-                                String avatarPath = uri.toString();
+                                avatarPath = uri.toString();
 
                                 // Cập nhật đường dẫn ảnh vào nhà hàng và lưu lại vào Realtime Database
                                 DatabaseReference restaurantRef = FirebaseDatabase.getInstance().getReference()
@@ -267,6 +263,7 @@ public class CreateRestaurantAcittivity extends AppCompatActivity {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         String uid = currentUser.getUid();
+        uploadImageToStorage(uid);
         String name = etNameRestaurant.getText().toString();
         String number = etNumber.getText().toString();
         String street = etStreet.getText().toString();
@@ -276,20 +273,16 @@ public class CreateRestaurantAcittivity extends AppCompatActivity {
         Address address = new Address(number, street, ward, district, city);
 
         // Tạo một đối tượng Restaurant với thông tin đã lấy được
-        Restaurant restaurant = new Restaurant(name, "", address, true);
+        Restaurant restaurant = new Restaurant(name, avatarPath, address, true);
 
         // Tham chiếu đến node "restaurants" trong Firebase Realtime Database
         DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants").child(uid);
-
-        // Tạo một khóa tự động cho dữ liệu mới trong "restaurants" node
 
         // Đặt giá trị dữ liệu của nhà hàng tại địa chỉ mới vừa tạo
         restaurantsRef.setValue(restaurant).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    // Lưu thông tin nhà hàng thành công, tiếp tục lưu ảnh vào Firebase Storage
-                    uploadImageToStorage(uid);
                     startActivity(new Intent(CreateRestaurantAcittivity.this, HomeActivity.class));
                     finish();
                 } else {
