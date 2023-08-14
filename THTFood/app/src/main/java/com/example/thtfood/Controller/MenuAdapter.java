@@ -16,11 +16,14 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.thtfood.Model.Product;
 import com.example.thtfood.R;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder> {
     private List<Product> products;
     private OnMenuItemDeleteListener listener; // Listener của activity
+    NumberFormat vndFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
     public void setOnMenuItemDeleteListener(OnMenuItemDeleteListener listener) {
         this.listener = listener;
@@ -82,7 +85,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
                     .into(imageViewMenu);
             // Thay thế bằng ảnh từ MenuItem (nếu có)
             textViewMenu.setText(productItem.getName());
-            textViewPrice.setText(String.valueOf(productItem.getPrice()));
+            textViewPrice.setText(String.valueOf(vndFormat.format(productItem.getPrice())));
             // Thiết lập các sự kiện onClick cho imageButton (nếu có)
         }
     }

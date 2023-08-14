@@ -45,7 +45,13 @@ public class HomeActivity extends AppCompatActivity {
 
             if(item.getItemId() == R.id.home){
                 if(user != null && "1".equals(user.getRole()) ){
-                    replaceFragment(new RestaurantManagerFragment());
+                    RestaurantHelper.checkRestaurant(isRestaurant -> {
+                        // Xử lý kết quả trả về tùy thuộc vào giá trị của isRestaurant
+                        if (isRestaurant) {
+                            replaceFragment(new RestaurantManagerFragment());
+                        } else {
+                        }
+                    });
                 }
                 else {
                     replaceFragment(new HomeFragment());
