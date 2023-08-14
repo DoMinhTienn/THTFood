@@ -47,10 +47,14 @@ public class AddMenuActivity extends AppCompatActivity {
     private ImageButton btnchooseImage, imageButtonQuit;
     private Button btnConfirm;
     private Uri imageUri;
-
     private EditText eTname;
     private EditText eTprice;
     private EditText eTdescription;
+    private String name, description,imagePath;
+    private double price;
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+    String restaurantId = currentUser.getUid();
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -84,10 +88,10 @@ public class AddMenuActivity extends AppCompatActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = eTname.getText().toString();
-                double price = Double.parseDouble(eTprice.getText().toString());
-                String description = eTdescription.getText().toString();
-                addMenu(name, price, description);
+                name = eTname.getText().toString();
+                price = Double.parseDouble(eTprice.getText().toString());
+                description = eTdescription.getText().toString();
+                uploadImageToStorage(restaurantId);
 
             }
         });
@@ -119,11 +123,9 @@ public class AddMenuActivity extends AppCompatActivity {
         }
     }
 
-    private void addMenu(String name, double price, String description) {
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        String restaurantId = currentUser.getUid();
-        Product product = new Product(name, "", price, description, true);
+    private void addMenu() {
+
+        Product product = new Product(name, imagePath, price, description, true);
 
         DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants").child(restaurantId);
         DatabaseReference menuRef = restaurantsRef.child("menu");
@@ -134,7 +136,6 @@ public class AddMenuActivity extends AppCompatActivity {
                 menuRef.child(newMenuId).setValue(product).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        uploadImageToStorage(restaurantId, name, newMenuId);
                         Intent resultIntent = new Intent();
                         setResult(RESULT_OK, resultIntent);
                         finish();
@@ -149,7 +150,7 @@ public class AddMenuActivity extends AppCompatActivity {
         });
     }
 
-    private void uploadImageToStorage(String restaurantId, String name, String menuId) {
+    private void uploadImageToStorage(String restaurantId) {
         if (imageUri != null) {
             ContentResolver contentResolver = getContentResolver();
             MimeTypeMap mime = MimeTypeMap.getSingleton();
@@ -167,14 +168,8 @@ public class AddMenuActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Uri uri) {
                                 // Lấy đường dẫn của ảnh từ Storage
-                                String imagePath = uri.toString();
-
-                                DatabaseReference menuRef = FirebaseDatabase.getInstance().getReference()
-                                        .child("restaurants")
-                                        .child(restaurantId)
-                                        .child("menu")
-                                        .child(menuId);
-                                menuRef.child("image").setValue(imagePath);
+                                imagePath = uri.toString();
+                                addMenu();
                             }
                         });
                     }

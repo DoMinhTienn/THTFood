@@ -35,23 +35,25 @@ public class AuthenticationManager {
     private User user_register;
     private String phone;
     String vertificationId;
-     private OTPVerificationDialog otpVerificationDialog;
+    private OTPVerificationDialog otpVerificationDialog;
 
-    public  AuthenticationManager(Activity activity) {
+    public AuthenticationManager(Activity activity) {
         this.activity = activity;
         mAuth = FirebaseAuth.getInstance();
     }
-    public  AuthenticationManager(Activity activity, User user) {
+
+    public AuthenticationManager(Activity activity, User user) {
         this.activity = activity;
         mAuth = FirebaseAuth.getInstance();
         this.user_register = user;
     }
-    public void sendverificationcode(String n){
+
+    public void sendverificationcode(String n) {
 
         phone = n;
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber("+84"+n)       // Phone number to verify
+                        .setPhoneNumber("+84" + n)       // Phone number to verify
                         .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
                         .setActivity(activity)                 // (optional) Activity for callback binding
                         // If no activity is passed, reCAPTCHA verification can not be used.
@@ -59,21 +61,22 @@ public class AuthenticationManager {
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
+
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks
-    mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
         @Override
         public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
 
             final String code = credential.getSmsCode();
-            if (code != null){
+            if (code != null) {
                 verifycode(code);
             }
         }
 
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
-            Toast.makeText(activity,"Faild", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "Faild", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -83,48 +86,49 @@ public class AuthenticationManager {
             showOTPVerificationDialog(s, phone);
         }
     };
-    private void verifycode(String code){
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(vertificationId,code);
+
+    private void verifycode(String code) {
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(vertificationId, code);
         singinbyCredential(credential);
     }
 
     public void singinbyCredential(PhoneAuthCredential credential) {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()) {
-                    FirebaseUser user = task.getResult().getUser();
-                    String userId = user.getUid();
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = task.getResult().getUser();
+                            String userId = user.getUid();
 
-                    DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
-                    DatabaseReference newUserRef = usersRef.child(userId); // Tạo một nút con mới
+                            DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
+                            DatabaseReference newUserRef = usersRef.child(userId); // Tạo một nút con mới
 
-                    newUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(snapshot.exists()){
-                                String name = snapshot.child("name").getValue(String.class);
-                                String email = snapshot.child("email").getValue(String.class);
-                                String role = snapshot.child("role").getValue(String.class);
-                                String avatar = snapshot.child("avatar").getValue(String.class);
+                            newUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        String name = snapshot.child("name").getValue(String.class);
+                                        String email = snapshot.child("email").getValue(String.class);
+                                        String role = snapshot.child("role").getValue(String.class);
+                                        String avatar = snapshot.child("avatar").getValue(String.class);
 
-                                User user = new  User(name, email, role, avatar);
-                                UserManager.getInstance().setUser(user);
-                                activity.startActivity(new Intent(activity, HomeActivity.class));
-                            } else{
-                                saveUser(newUserRef, userId);
-                            }
+                                        User user = new User(name, email, role, avatar);
+                                        UserManager.getInstance().setUser(user);
+                                        activity.startActivity(new Intent(activity, HomeActivity.class));
+                                    } else {
+                                        saveUser(newUserRef, userId);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Toast.makeText(activity, "Database error", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            Toast.makeText(activity, "Database error", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
-        })
+                    }
+                })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -134,59 +138,46 @@ public class AuthenticationManager {
                     }
                 });
     }
+
     private void saveUser(DatabaseReference userRef, String userId) {
         String name = user_register.getName();
         String email = user_register.getEmail();
         String role = user_register.getRole();
 
-        // Lấy URL của file default.jpg từ Firebase Storage
-        StorageReference defaultRef = FirebaseStorage.getInstance().getReference().child("avatars").child("default.png");
-        defaultRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
-            // Lưu hình ảnh vào Firebase Storage
-            String filename = "avatar_" + userId + ".png";
-            StorageReference avatarRef = FirebaseStorage.getInstance().getReference().child("avatars").child(filename);
-            avatarRef.putBytes(bytes).addOnSuccessListener(taskSnapshot -> {
-                // Lấy URL của hình ảnh đã lưu trong Firebase Storage
-                avatarRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    String avatarUrl = uri.toString();
+        StorageReference avatarRef = FirebaseStorage.getInstance().getReference().child("avatars").child("default.png");
+        // Lấy URL của hình ảnh đã lưu trong Firebase Storage
+        avatarRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            String avatarUrl = uri.toString();
 
-                    // Lưu URL của hình ảnh vào Realtime Database
-                    userRef.child("avatar").setValue(avatarUrl)
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    // Lưu các thông tin khác vào Realtime Database
-                                    userRef.child("name").setValue(name);
-                                    userRef.child("email").setValue(email);
-                                    userRef.child("role").setValue(role);
-                                    Toast.makeText(activity, "Authentication success", Toast.LENGTH_SHORT).show();
-                                    activity.startActivity(new Intent(activity, HomeActivity.class));
-                                } else {
-                                    Toast.makeText(activity, "Failed to save user information", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                    User user = new  User(name, email, role, avatarUrl);
-                    UserManager.getInstance().setUser(user);
-                }).addOnFailureListener(exception -> {
-                    // Xử lý khi không lấy được URL của hình ảnh trong Firebase Storage
-                    Toast.makeText(activity, "Failed to get avatar URL", Toast.LENGTH_SHORT).show();
-                });
-            }).addOnFailureListener(exception -> {
-                // Xử lý khi không lưu được hình ảnh vào Firebase Storage
-                Toast.makeText(activity, "Failed to save avatar image", Toast.LENGTH_SHORT).show();
-            });
+            // Lưu URL của hình ảnh vào Realtime Database
+            userRef.child("avatar").setValue(avatarUrl)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            // Lưu các thông tin khác vào Realtime Database
+                            userRef.child("name").setValue(name);
+                            userRef.child("email").setValue(email);
+                            userRef.child("role").setValue(role);
+                            Toast.makeText(activity, "Authentication success", Toast.LENGTH_SHORT).show();
+                            activity.startActivity(new Intent(activity, HomeActivity.class));
+                        } else {
+                            Toast.makeText(activity, "Failed to save user information", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+            User user = new User(name, email, role, avatarUrl);
+            UserManager.getInstance().setUser(user);
         }).addOnFailureListener(exception -> {
-            // Xử lý khi không tải được nội dung của `default.jpg`
-            Toast.makeText(activity, "Failed to load default avatar", Toast.LENGTH_SHORT).show();
+            // Xử lý khi không lấy được URL của hình ảnh trong Firebase Storage
+            Toast.makeText(activity, "Failed to get avatar URL", Toast.LENGTH_SHORT).show();
         });
-
     }
 
-    private void showOTPVerificationDialog(String verificationId, String phone){
+
+    private void showOTPVerificationDialog(String verificationId, String phone) {
         otpVerificationDialog = new OTPVerificationDialog(activity, verificationId, phone);
         otpVerificationDialog.setVerificationListener(new OTPVerificationDialog.OTPVerificationListener() {
             @Override
             public void onVerificationCompleted(String code) {
-               verifycode(code);
+                verifycode(code);
             }
 
         });
