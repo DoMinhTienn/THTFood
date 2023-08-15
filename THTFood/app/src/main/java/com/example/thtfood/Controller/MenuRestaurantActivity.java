@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.thtfood.Model.Product;
@@ -39,6 +40,8 @@ public class MenuRestaurantActivity extends AppCompatActivity implements MenuAda
     private Button btnConfirm;
     private ImageButton imageButtonQuit;
     private  TextView tvNoData;
+    private SearchView searchView;
+    private List<Product> filteredProducts = new ArrayList<>();
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     String restaurantId = currentUser.getUid();
@@ -47,6 +50,7 @@ public class MenuRestaurantActivity extends AppCompatActivity implements MenuAda
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_restaurant);
+        searchView = findViewById(R.id.searchView);
         recyclerView = findViewById(R.id.recyclerViewMenu);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         menuAdapter = new MenuAdapter(products);
@@ -55,6 +59,19 @@ public class MenuRestaurantActivity extends AppCompatActivity implements MenuAda
         btnConfirm = findViewById(R.id.btnConfirm);
         tvNoData = findViewById(R.id.tvNoData);
         imageButtonQuit = findViewById(R.id.imageButtonQuit);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterProducts(newText);
+                return false;
+            }
+        });
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,6 +111,7 @@ public class MenuRestaurantActivity extends AppCompatActivity implements MenuAda
                             String key = snapshot.getKey();
                             productsKey.add(key);
                             products.add(product);
+                            filteredProducts.add(product);
                             menuAdapter.notifyDataSetChanged();
                         }
 
@@ -151,7 +169,16 @@ public class MenuRestaurantActivity extends AppCompatActivity implements MenuAda
         }
     }
 
-
+    private void filterProducts(String query){
+        filteredProducts.clear();
+        for (Product product : products) {
+            if (product.getName().toLowerCase().contains(query.toLowerCase())) {
+                filteredProducts.add(product);
+            }
+        }
+        menuAdapter.setData(filteredProducts);
+        handleNoData();
+    }
     private void showDeleteConfirmationDialog(int position) {
         CustomDialog dialog = new CustomDialog(this);
         dialog.setDialogMessage("Bạn có chắc chắn muốn xóa mục này?");

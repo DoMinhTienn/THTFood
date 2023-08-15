@@ -31,7 +31,10 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     public interface OnMenuItemDeleteListener {
         void onMenuItemDelete(int position);
     }
-
+    public void setData(List<Product> data) {
+        this.products = data;
+        notifyDataSetChanged();
+    }
 
     public MenuAdapter(List<Product> products) {
         this.products = products;
