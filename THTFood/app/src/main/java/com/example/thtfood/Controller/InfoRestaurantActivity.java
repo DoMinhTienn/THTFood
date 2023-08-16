@@ -62,10 +62,13 @@ import java.util.Map;
 
 public class InfoRestaurantActivity extends AppCompatActivity {
 
+
     public static final int REQUEST_IMAGE_GET = 1;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = firebaseAuth.getCurrentUser();
     String uid = currentUser.getUid();
+
+    DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants").child(uid);
     private ImageButton imageButtonQuit, btnChooseImage;
     private ImageView restaurantImage;
     private Button btnConfirm;
@@ -343,24 +346,13 @@ public class InfoRestaurantActivity extends AppCompatActivity {
         city = autoCompleteCity.getText().toString();
         Address address = new Address(number, street, ward, district, city);
 
-        // Update đối tượng Restaurant với thông tin đã lấy được
-        Restaurant restaurant = new Restaurant(name, avatarPath, address, true);
-
-        // Tham chiếu đến node "restaurants" trong Firebase Realtime Database
-        DatabaseReference restaurantsRef = FirebaseDatabase.getInstance().getReference().child("restaurants").child(uid);
-        restaurantsRef.setValue(restaurant).addOnCompleteListener(new OnCompleteListener<Void>() {
-
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    // Lưu thông tin nhà hàng thành công, tiếp tục lưu ảnh vào Firebase Storage
-                    Toast.makeText(getApplicationContext(), "Cập nhật thành công", Toast.LENGTH_SHORT).show();
-                    finish();
-                } else {
-                    // Xảy ra lỗi khi lưu thông tin nhà hàng
-                    Toast.makeText(getApplicationContext(), "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        restaurantsRef.child("avatar_path").setValue(avatarPath);
+        restaurantsRef.child("name").setValue(name);
+        if (!city.isEmpty())
+        {
+            restaurantsRef.child("address").setValue(address);
+        }
+        finish();
+        Toast.makeText(getApplicationContext(), "Cập nhật thành công", Toast.LENGTH_SHORT).show();
     }
 }
