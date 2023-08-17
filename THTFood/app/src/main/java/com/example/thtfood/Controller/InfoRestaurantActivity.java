@@ -156,7 +156,7 @@ public class InfoRestaurantActivity extends AppCompatActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadImageToStorage(uid);
+                onSaveRestaurantInfo();
             }
         });
         toggleButtonEditData.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -285,33 +285,6 @@ public class InfoRestaurantActivity extends AppCompatActivity {
         }
     }
 
-    public void uploadImageToStorage(final String restaurantId) {
-        if (imageUri != null) {
-            ContentResolver contentResolver = getContentResolver();
-            MimeTypeMap mime = MimeTypeMap.getSingleton();
-            String fileExtension = mime.getExtensionFromMimeType(contentResolver.getType(imageUri));
-
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference()
-                    .child("restaurant_avatars")
-                    .child(restaurantId + "." + fileExtension);
-
-            storageReference.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        task.getResult().getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                avatarPath = uri.toString();
-                                onSaveRestaurantInfo();
-                            }
-                        });
-                    }
-                }
-            });
-        }
-    }
-
     private void enableEdit() {
         etNameRestaurant.setEnabled(true);
         etNumber.setEnabled(true);
@@ -325,6 +298,7 @@ public class InfoRestaurantActivity extends AppCompatActivity {
     }
 
     private void disableEdit() {
+
         etNameRestaurant.setEnabled(false);
         etNumber.setEnabled(false);
         etStreet.setEnabled(false);
@@ -337,6 +311,31 @@ public class InfoRestaurantActivity extends AppCompatActivity {
     }
 
     public void onSaveRestaurantInfo() {
+        if (imageUri != null) {
+            ContentResolver contentResolver = getContentResolver();
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            String fileExtension = mime.getExtensionFromMimeType(contentResolver.getType(imageUri));
+
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference()
+                    .child("restaurant_avatars")
+                    .child(uid + "." + fileExtension);
+
+            storageReference.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        task.getResult().getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                avatarPath = uri.toString();
+                                restaurantsRef.child("avatar_path").setValue(avatarPath);
+
+                            }
+                        });
+                    }
+                }
+            });
+        }
         String name = etNameRestaurant.getText().toString();
         String number = etNumber.getText().toString();
         String street = etStreet.getText().toString();
@@ -345,7 +344,6 @@ public class InfoRestaurantActivity extends AppCompatActivity {
         city = autoCompleteCity.getText().toString();
         Address address = new Address(number, street, ward, district, city);
 
-        restaurantsRef.child("avatar_path").setValue(avatarPath);
         restaurantsRef.child("name").setValue(name);
         if (!city.isEmpty())
         {
