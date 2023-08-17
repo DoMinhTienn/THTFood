@@ -156,7 +156,7 @@ public class InfoRestaurantActivity extends AppCompatActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onSaveRestaurantInfo();
+                uploadImageToStorage(uid);
             }
         });
         toggleButtonEditData.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -337,7 +337,6 @@ public class InfoRestaurantActivity extends AppCompatActivity {
     }
 
     public void onSaveRestaurantInfo() {
-        uploadImageToStorage(uid);
         String name = etNameRestaurant.getText().toString();
         String number = etNumber.getText().toString();
         String street = etStreet.getText().toString();
