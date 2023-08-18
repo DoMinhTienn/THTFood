@@ -84,7 +84,7 @@
         android:background="@drawable/round_back_red_10"
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
-        android:text="Thống kê theo lich"
+        android:text="Thống kê theo sản phẩm"
         android:textColor="#FFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
